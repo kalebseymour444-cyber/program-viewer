@@ -10,6 +10,7 @@
 import { readFileSync } from 'node:fs'
 import { relative, resolve } from 'node:path'
 import { ProgramValidationError, validateProgramYaml } from '../schema/validate.js'
+import { computeProgramGraph, DependencyCycleError } from '../graph/index.js'
 
 const DEFAULT_SOURCE = 'program.yaml'
 
@@ -43,20 +44,29 @@ function main(argv: string[]): number {
     const gates = program.tasks.filter((t) => t.gate).length
     const external = program.tasks.filter((t) => t.external).length
 
+    // SPEC §7: the build fails on a schema violation OR any dependency cycle.
+    // Cycles need the graph layer, so this is where that half is enforced.
+    const graph = computeProgramGraph(program)
+
     console.log(`${label} is valid.`)
     console.log(
       `  ${program.milestones.length} milestones · ${program.packages.length} packages · ` +
         `${program.tasks.length} tasks · ${program.roles.length} roles`,
     )
     console.log(`  ${gates} gates · ${external} externally controlled`)
+    console.log(`  no dependency cycles · ${graph.order.length} tasks ordered`)
     console.log(
-      '\nNote: dependency cycles are NOT checked here — that arrives with the graph\n' +
-        'layer in phase 3. A valid file may still contain one.',
+      `  ${graph.optimistic.schedule.projectDuration}–${graph.pessimistic.schedule.projectDuration} days ` +
+        `(optimistic–pessimistic)`,
     )
     return 0
   } catch (error) {
     if (error instanceof ProgramValidationError) {
       console.error(error.message)
+      return 1
+    }
+    if (error instanceof DependencyCycleError) {
+      console.error(`${label} — ${error.message}\n\nNothing is generated while validation fails.`)
       return 1
     }
     throw error

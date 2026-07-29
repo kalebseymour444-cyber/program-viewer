@@ -45,6 +45,8 @@ program.yaml  ──generate──▶  content/*.md        (build artifact — h
 ```
 /program.yaml                ← the ONLY hand-edited data file
 /schema/program.schema.ts    ← Zod schema + validation
+/graph/                      ← derived computation. Shared by the generator AND the app,
+                               so it sits outside src/. Addition to SPEC §6's layout.
 /scripts/generate.ts         ← YAML → JSON + markdown
 /scripts/import-markdown.ts  ← one-time migration helper (throwaway)
 /content/                    ← GENERATED. Never edit.
@@ -124,7 +126,7 @@ Keep this list accurate as phases land.
 
 | Command | Status | Does |
 |---|---|---|
-| `npm run validate` | ✅ phase 1 | Validate `program.yaml`. Takes a path argument. |
+| `npm run validate` | ✅ phase 1 | Validate `program.yaml` — schema, references, **and cycles**. Takes a path argument. |
 | `npm test` | ✅ phase 1 | Vitest. Graph computation above all, once it exists. |
 | `npm run typecheck` | ✅ phase 1 | `tsc --noEmit` |
 | `npm run generate` | phase 4 | `program.yaml` → `public/program.json` + `content/**` |
@@ -174,7 +176,7 @@ commit — versioned definitions and sign-off as code review, for free. Lean int
 
 - [x] 1. Schema + validation — `schema/`, 70 tests, `npm run validate`
 - [x] 2. Import helper (throwaway) — `program.yaml` drafted; **see `docs/import-review.md`**
-- [ ] 3. Graph computation — **unit-tested. Show the plan first.**
+- [x] 3. Graph computation — `graph/`, 167 tests. Cycles now fail `npm run validate`.
 - [ ] 4. Generator
 - [ ] 5. App shell + deploy to Pages
 - [ ] 6. Drill-down L0 → L1 → L2

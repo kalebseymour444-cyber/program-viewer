@@ -43,40 +43,74 @@ field. Resolves Q4.
 **removed from the milestone schema** (§3 authored it) and never added to packages. This closes the §2
 tension: a gate flag on a rollup was a second claim to truth about the same fact.
 
-*The derivation rule itself is deliberately not decided here — see Q24. Phase 1 only needs to know that
-the field is absent from the authored schema.*
+*The derivation rule itself is deliberately not decided here — see Q24, resolved by D8 below.*
+
+**D8 — There is no rollup gate, derived or authored.** Resolves Q24, 2026-07-28. `gate` exists only on
+tasks. Packages and milestones expose a derived **gate count** and the list of gate tasks beneath them;
+no boolean.
+
+Decided this way because **no structural rule reproduces the legacy marking**, which was measured
+against the imported data rather than assumed:
+
+| candidate rule | agrees with legacy L0 | marks as gate |
+|---|---|---|
+| any terminal task is a gate | 5/8 | M1 M2 M3 M4 M5 M7 M8 |
+| any boundary task is a gate | 2/8 | M2 M3 M4 M5 M6 M7 |
+| all boundary tasks are gates | 3/8 | M2 M3 M7 |
+| any descendant task is a gate | 4/8 | all eight |
+
+Legacy marks M1, M2, M4, M8. The terminal rule — the most defensible one, since `conventions.md` defines
+a gate as something no successor passes — wrongly marks M3 (`M3.5.2` label reconciliation), M5
+(`M5.4.3` OOB proven) and M7 (`M7.9.2` monitoring live). Each of those genuinely is a gate task with no
+successor inside its milestone; the milestone still was not marked.
+
+The conclusion is that the 🚨 on a legacy milestone is an **editorial judgment** about contractual
+significance, not a property of the graph. Since it is not derivable, authoring it would not have
+violated §2 — but a hand-maintained editorial flag is exactly the kind of field that quietly stops
+being true, and a gate count carries the same information without anyone having to maintain it.
+
+The legacy marking is not lost: `docs/import-review.md` records all four milestones and fifteen
+packages that carried it.
+
+**D9 — Rollup status severity, worst first: `BLOCKED` > `AT_RISK` > `IN_PROGRESS` > `NOT_STARTED` >
+`COMPLETE`.** A package or milestone takes the worst status among its tasks (SPEC §3 — never average,
+never round toward optimism). One blocked task blocks the milestone. A milestone with work underway
+reads `IN_PROGRESS` even when some tasks are untouched; one with nothing started reads `NOT_STARTED`;
+`COMPLETE` requires every task complete.
 
 ---
 
-## Still open — blocking phase 3
+## Resolved — was blocking phase 3
 
-**Q24 — What rule derives a rollup gate?** Consequence of D7, and it is not the obvious one.
+**Q24 — What rule derives a rollup gate?** **Resolved by D8: none.** The analysis below is kept because
+it is the evidence for that decision. Consequence of D7, and not the obvious one.
 
 `any descendant task.gate` **marks all 8 milestones as gates**, because every milestone contains at
 least one gate task. The legacy L0 marks only M1, M2, M4, M8. A flag that is true for everything
 carries no information — precisely the "gates become decorative" anti-pattern `gates.md` warns about.
 
 Candidate rule: **a rollup is a gate when its terminal task is a gate** — i.e. the *exit* is gated,
-which matches `conventions.md` ("no successor begins until the criterion is evidenced"). Checked
-against the legacy data it reproduces 7 of 8:
+which matches `conventions.md` ("no successor begins until the criterion is evidenced").
 
-| | terminal task | gate? | legacy L0 |
+An earlier draft of this entry claimed that rule reproduced 7 of 8 milestones. **It does not — it
+reproduces 5 of 8.** That estimate was made by eye, taking the last task by ID as the milestone's
+terminal. Computed properly against `program.yaml`, a terminal task is any task with no successor
+*inside* its own milestone, and most milestones have several:
+
+| | terminal tasks (* = gate) | terminal rule | legacy L0 |
 |---|---|---|---|
-| M1 | M1.5.3, M1.6.3 | yes | 🚨 ✓ |
-| M2 | M2.8.4 | yes | 🚨 ✓ |
-| M3 | M3.6.5 | no | — ✓ |
-| M4 | M4.7.3 | yes | 🚨 ✓ |
-| M5 | M5.6.4 | no | — ✓ |
-| M6 | M6.8.4 | no | — ✓ |
-| M7 | **M7.9.2** | **yes** | **—** ✗ |
-| M8 | M8.8.4 | yes | 🚨 ✓ |
+| M1 | M1.1.5, M1.4.3, M1.5.3\*, M1.6.3\* | gate | 🚨 ✓ |
+| M2 | M2.2.1, M2.2.6\*, M2.4.4, M2.8.4\* | gate | 🚨 ✓ |
+| M3 | M3.1.4, M3.2.3, **M3.5.2\***, M3.6.5 | gate | — ✗ |
+| M4 | M4.6.3, M4.7.3\* | gate | 🚨 ✓ |
+| M5 | M5.2.2, **M5.4.3\***, M5.6.4 | gate | — ✗ |
+| M6 | M6.1.2, M6.4.2, M6.5.3, M6.6.3, M6.7.3, M6.7.4, M6.8.4 | — | — ✓ |
+| M7 | M7.1.3, M7.2.3, M7.4.3, M7.5.4, M7.6.2, M7.8.2, **M7.9.2\*** | gate | — ✗ |
+| M8 | M8.1.5, M8.2.4, M8.6.3, M8.8.4\* | gate | 🚨 ✓ |
 
-The M7 mismatch is arguably a legacy authoring error rather than a flaw in the rule: `gates.md` states
-M7.9.2 "Monitoring live **before** validation begins" blocks all of M8, which is a gated exit by any
-reasonable reading. Same class of finding as Q10–Q14 — the derived view disagreeing with the authored
-one, which is the point of the exercise.
-
-Needs a decision before phase 3. Not blocking phase 1.
+M3, M5 and M7 each end on a gate task that has no successor inside the milestone, yet none was marked.
+That is not a near-miss to be explained away — it is evidence that the legacy 🚨 tracks something the
+graph does not encode. See D8.
 
 ---
 
@@ -128,10 +162,43 @@ path is M2.7.4 → M5.4.3 → M7.2.1, i.e. M2 reaches M7 *through M5*.
 **Q12 — Consequently, derived M5 depends on M2**, via M5.4.3 ← M2.7.4. The authored L0 says M5 depends
 on M3 and M4 only. If Q11 is fixed by adding M2.8.4 → M7.x, this may resolve on its own.
 
-**Q13 — The stated critical path may not survive computation.** L0 asserts `M1 → M2 → M7 → M8`. With
-Q10/Q11 unresolved and durations unresolved (Q1), the computed longest path will likely differ. Expect
-the generated L0 to disagree with the legacy L0 — that disagreement is the point of the exercise, but
-someone has to ratify the corrected version.
+**Q13 — The stated critical path may not survive computation.** L0 asserts `M1 → M2 → M7 → M8`.
+
+**Computed 2026-07-28 (phase 3).** It survives in the pessimistic scenario and does not in the
+optimistic one — and the pessimistic path is *truncated* by the missing edge from Q11:
+
+| scenario | project | critical path by milestone |
+|---|---|---|
+| optimistic (`duration.min`) | 105 days | `M1 → M3 → M5 → M7 → M8` — 40 tasks |
+| pessimistic (`duration.max`) | 211 days | `M1 → M2` — 19 tasks, ending at `M2.8.4` WAN acceptance |
+
+Two things follow.
+
+**The legacy claim is nearly right, and the gap is exactly Q11.** Under pessimistic durations the
+critical path does run M1 → M2, confirming that WAN is the pole that kills the date. It stops at
+`M2.8.4` rather than continuing to M7 and M8 *only because no M7 task lists an M2 predecessor*. Add
+the `M2.8.4 → M7.x` edge and the computed path becomes `M1 → M2 → M7 → M8`, precisely as L0 states.
+
+**The missing edge produces a visibly absurd schedule, which is useful.** With M2 dangling, M8 finishes
+on day 163 while M2 finishes on day 211 — the model currently says clusters go live 48 days *before*
+the WAN is accepted. That is the exact failure `L0-program.md` warns about in prose: "A data hall that
+is energized, racked, cabled, and validated but has one WAN path is not deliverable." The graph says it
+numerically. **This is the strongest argument for resolving Q11 by adding the edge rather than by
+deleting the claim.**
+
+The optimistic path running through the construction lane (M3 → M5 → M6 → M7) also matches the legacy
+narrative that "the construction path is what gets reported on because it's visible" — it genuinely is
+critical, but only when nothing runs long.
+
+**Q25 — A milestone's earliest start can be dragged to day 0 by one unconstrained task.** Found while
+checking the phase 3 rollups. M7 rolls up as starting on day 0 because `M7.3.1` ("Known-good firmware
+matrix published & version-pinned") has no predecessors, even though every other task in M7 waits on
+M5 and M6. The rollup is arithmetically correct — earliest start is the minimum over member tasks — but
+it reads as though M7 begins immediately.
+
+Either `M7.3.1` is genuinely startable on day one (plausible: publishing a firmware matrix is desk
+work) and the rollup is honest, or it is missing a predecessor. Same class as Q10–Q12. Affects the
+timeline view (phase 8) more than anything else.
 
 **Q14 — M8.5 "gates exit" but has no edge saying so.** `M8-tasks.md` states "M8.5 is not a phase, it is
 a loop running under everything else. **It gates exit, it does not follow.**" M8.6.1 depends only on
