@@ -8,11 +8,8 @@
 import { Link } from 'react-router-dom'
 import { GateCount, Id, Role, StatusBadge } from '../components/Badges.js'
 import { useScenario } from '../components/Layout.js'
+import { Days, Td, Th } from '../components/ui.js'
 import { useProgram } from '../lib/program.js'
-
-function Days({ value }: { value: number }) {
-  return <span className="font-mono tabular-nums">{value}d</span>
-}
 
 export function ProgramView() {
   const program = useProgram()
@@ -203,10 +200,3 @@ function Figure({ label, value, accent }: { label: string; value: string; accent
   )
 }
 
-function Th({ children, className = '' }: { children: React.ReactNode; className?: string }) {
-  return <th className={`px-3 py-1.5 font-medium ${className}`}>{children}</th>
-}
-
-function Td({ children, className = '' }: { children: React.ReactNode; className?: string }) {
-  return <td className={`px-3 py-1.5 align-baseline ${className}`}>{children}</td>
-}

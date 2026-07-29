@@ -193,7 +193,8 @@ commit — versioned definitions and sign-off as code review, for free. Lean int
 - [x] 3. Graph computation — `graph/`, 167 tests. Cycles now fail `npm run validate`.
 - [x] 4. Generator — `scripts/generate.ts` + `scripts/render/`, 22 files, 58 tests
 - [x] 5. App shell + deploy to Pages — `src/`, L0 view, hash routing, CI workflow
-- [ ] 6. Drill-down L0 → L1 → L2
+- [x] 6. Drill-down L0 → L1 → L2 — L1/L2 routes, breadcrumbs, deep links, sortable/filterable
+      task table, 8 tests. Every level renders the shipped rollup; no ID slicing.
 - [ ] 7. Graph view + chain highlighting — **show the plan first**
 - [ ] 8. Timeline view
 - [ ] 9. Search, filters, keyboard nav, polish
