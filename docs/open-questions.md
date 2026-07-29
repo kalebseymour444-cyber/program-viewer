@@ -116,12 +116,61 @@ graph does not encode. See D8.
 
 ## Content loss under the specified generator
 
-**Q6 — There is nowhere in the schema for the prose.** Every legacy file carries substantial
-non-tabular content: "Seam notes", "Exit criteria", "Parallel lanes" commentary, ASCII lane diagrams,
-the definition-of-done contract, and `conventions.md` in full. The schema has only `note` on a task.
-Regenerating `content/` from `program.yaml` as specified produces documents materially poorer than the
-ones being replaced. Needs narrative fields at program/milestone/package level, or an explicit decision
-to discard. This is the largest gap between §3 and what exists.
+**Q6 — There is nowhere in the schema for the prose.** **Resolved 2026-07-28 by D10 and D11.** Every
+legacy file carries substantial non-tabular content: "Seam notes", "Exit criteria", "Parallel lanes"
+commentary, ASCII lane diagrams, the definition-of-done contract, and `conventions.md` in full. The
+schema has only `note` on a task.
+
+The question turned out to conflate two different kinds of content. Much of what reads as prose is a
+**restatement of structure the graph now computes**, and is therefore subject to §2 like any other
+derived value. M4's exit criteria are the clearest case — all four bullets restate gate criteria
+already authored on M4's tasks:
+
+| M4 exit criterion (authored prose) | already authored at |
+|---|---|
+| Fluid chemistry verified against spec, not just "filled" | `M4.3.4` criterion |
+| Flow rate and delta-T verified under simulated load | `M4.3.7` criterion |
+| Leak detection functionally triggered, not merely installed | `M4.4.2` criterion |
+| Written handover criteria signed by construction **and** deployment | `M4.7.3` criterion |
+
+The same applies to the "Parallel lanes" sections (lane structure is computable), and to every L1
+header line stating duration and dependencies.
+
+What remains once the derivable parts are removed is smaller and genuinely non-derivable: milestone
+thesis blockquotes, seam notes, and register commentary.
+
+**D10 — Non-derivable prose lives in `narrative/`, as sidecar markdown partials.** Resolves the first
+half of Q6.
+
+- `narrative/<id>.md` holds commentary for that entity — `narrative/M4.md`, `narrative/M4.3.md`.
+  Registers get `narrative/registers/<name>.md`.
+- The generator **includes them verbatim** at defined slots. It must never parse them for structure.
+  They are prose inputs carrying no data, so §2's single machine-readable source of truth is intact:
+  `program.yaml` remains the only place structure is authored.
+- A missing partial is fine — the slot is simply empty. A partial naming an entity that does not exist
+  is a **build error**, the same as any other dangling reference.
+
+**The discipline that makes this safe: a narrative partial must contain no structural claim.** No
+durations, no dependency assertions, no counts. "Handover is an *event* to a GC and an *interval* to
+deployment" is safe forever. "Five independent lanes converge on one acceptance walk" is not — it is a
+fact about the graph, it will silently stop being true, and it must be generated instead.
+
+This matters immediately, because the legacy prose is full of such claims — "M2 is the longest-duration
+milestone by a wide margin", "M4.3.3 through M4.3.7 is a serial chain with no compression available",
+"~8 months". Migrating the commentary into `narrative/` is therefore not a copy-paste: each structural
+claim has to be either dropped in favour of a generated one, or rewritten as the insight it was
+illustrating.
+
+**D11 — Milestone and package exit criteria are derived from the gate criteria beneath them.**
+Resolves the second half of Q6. The generated "Exit criteria" section lists every gate task in the
+rollup with its `criterion` and `evidence`. Nothing is authored, so nothing can drift.
+
+**Q26 — M1's OFCI/CFCI exit criterion has no gate.** Found while checking D11. Three of M1's four
+authored exit criteria map to gate tasks (`M1.2.3`, `M1.5.3`, `M1.6.3`); the fourth — "OFCI/CFCI
+boundary written, with the delay-risk allocation stated" — maps to `M1.3.2`, which is not marked as a
+gate. Under D11 that criterion simply disappears from the generated output. Either `M1.3.2` should be
+a gate, or it was never really an exit criterion. Same class as Q10–Q12: the derivation exposing an
+inconsistency in the authored data.
 
 **Q7 — The dependency register changes meaning.** SPEC §4 generates
 `content/registers/dependencies.md` as "cross-milestone edges only, sorted by span length descending".

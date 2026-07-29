@@ -23,6 +23,18 @@ program.yaml  ──generate──▶  content/*.md        (build artifact — h
   one and divergent by week three, with no way to adjudicate which is true.
 - **If a design decision would violate this, say so and stop.** Do not work around it.
 
+### The one rule for `narrative/`
+
+Prose partials are included verbatim and never parsed, so they do not violate the rule above — but only
+while they stay commentary. **A narrative partial must contain no structural claim:** no durations, no
+dependency assertions, no counts.
+
+> "Handover is an *event* to a GC and an *interval* to deployment" — safe forever.
+> "Five independent lanes converge on one acceptance walk" — **not safe.** That is a fact about the
+> graph. It will silently stop being true. Generate it.
+
+If a sentence would need editing after someone adds a task, it does not belong in `narrative/`.
+
 ---
 
 ## How to work here
@@ -49,6 +61,8 @@ program.yaml  ──generate──▶  content/*.md        (build artifact — h
                                so it sits outside src/. Addition to SPEC §6's layout.
 /scripts/generate.ts         ← YAML → JSON + markdown
 /scripts/import-markdown.ts  ← one-time migration helper (throwaway)
+/narrative/                  ← hand-written prose partials, included verbatim by the
+                               generator. Commentary only — see the rule below.
 /content/                    ← GENERATED. Never edit.
 /public/program.json         ← GENERATED. Never edit.
 /src/                        ← React app
