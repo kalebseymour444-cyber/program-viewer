@@ -44,6 +44,40 @@ export function useProgram(): ProgramDocument {
 }
 
 /**
+ * ID → row lookups for the three levels.
+ *
+ * The document is a build artifact and never mutates, so the maps are built
+ * once per document and cached against it — drilling from L0 to a task does not
+ * rescan three arrays on every navigation. Rows carry both the authored fields
+ * and the structural rollup (`childIds`, `taskIds`, `dependsOn`, `feeds`, …),
+ * so hierarchy is walked through the derived graph, never by slicing IDs.
+ */
+export interface ProgramIndex {
+  readonly milestones: ReadonlyMap<string, MilestoneRow>
+  readonly packages: ReadonlyMap<string, PackageRow>
+  readonly tasks: ReadonlyMap<string, TaskRow>
+}
+
+const indexCache = new WeakMap<ProgramDocument, ProgramIndex>()
+
+export function indexOf(program: ProgramDocument): ProgramIndex {
+  const cached = indexCache.get(program)
+  if (cached) return cached
+
+  const index: ProgramIndex = {
+    milestones: new Map(program.milestones.map((m) => [m.id, m])),
+    packages: new Map(program.packages.map((p) => [p.id, p])),
+    tasks: new Map(program.tasks.map((t) => [t.id, t])),
+  }
+  indexCache.set(program, index)
+  return index
+}
+
+export function useIndex(): ProgramIndex {
+  return indexOf(useProgram())
+}
+
+/**
  * Pessimistic is the default everywhere (D3).
  *
  * SPEC §3 forbids rounding toward optimism, and the critical path can be a
