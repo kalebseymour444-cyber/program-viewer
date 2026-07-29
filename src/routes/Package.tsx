@@ -9,7 +9,7 @@
  */
 
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, useSearchParams } from 'react-router-dom'
 import type { Status, TaskType } from '../../schema/program.schema.js'
 import { Id, Role, StatusBadge, TypeBadge } from '../components/Badges.js'
 import { Breadcrumbs } from '../components/Breadcrumbs.js'
@@ -38,7 +38,11 @@ export function PackageView({
   focusTaskId?: string
 } = {}) {
   const params = useParams()
+  const [search] = useSearchParams()
   const packageId = packageIdProp ?? params.packageId ?? ''
+  // A row can be deep-linked either by prop (from the task focus view) or by a
+  // `?focus=` query param, so /package/M1.1?focus=M1.1.3 highlights the row.
+  const focused = focusTaskId ?? search.get('focus') ?? undefined
 
   const program = useProgram()
   const index = useIndex()
@@ -176,7 +180,7 @@ export function PackageView({
                 key={task.id}
                 task={task}
                 float={data.tasks[task.id]!.float}
-                focused={task.id === focusTaskId}
+                focused={task.id === focused}
               />
             ))}
             {rows.length === 0 && (
@@ -409,17 +413,3 @@ function FilterSelect({
   )
 }
 
-/**
- * `/task/<id>` — resolve the owning package from the ID's ancestry and render L2
- * with the row focused. Single-task focus with full chain highlighting is
- * phase 7; this is only the deep-link landing.
- */
-export function TaskView() {
-  const { taskId = '' } = useParams()
-  const index = useIndex()
-  const task = index.tasks.get(taskId)
-  if (task === undefined) {
-    return <MissingNode kind="task" id={taskId} />
-  }
-  return <PackageView packageId={task.package} focusTaskId={taskId} />
-}

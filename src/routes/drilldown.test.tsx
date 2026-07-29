@@ -14,7 +14,7 @@ import realProgram from '../../public/program.json'
 import { ScenarioProvider } from '../components/Layout.js'
 import { ProgramContext, type ProgramDocument } from '../lib/program.js'
 import { MilestoneView } from './Milestone.js'
-import { PackageView, TaskView } from './Package.js'
+import { PackageView } from './Package.js'
 
 const program = realProgram as unknown as ProgramDocument
 
@@ -32,7 +32,6 @@ function renderAt(path: string) {
           <Routes>
             <Route path="/milestone/:milestoneId" element={<MilestoneView />} />
             <Route path="/package/:packageId" element={<PackageView />} />
-            <Route path="/task/:taskId" element={<TaskView />} />
           </Routes>
         </MemoryRouter>
       </ScenarioProvider>
@@ -108,23 +107,13 @@ describe('L2 — package task table', () => {
   })
 })
 
-describe('deep link — /task/:id', () => {
-  it('lands on the owning package with the task row focused', () => {
+describe('deep link — /package/:id?focus=', () => {
+  it('highlights exactly the focused task row', () => {
     const task = pkgTasks[0]!
-    const { container } = renderAt(`/task/${task.id}`)
+    const { container } = renderAt(`/package/${pkg.id}?focus=${task.id}`)
 
-    // Breadcrumb shows the package, proving we resolved parentage from the ID.
-    const nav = screen.getByLabelText('Breadcrumb')
-    expect(within(nav).getByText(task.package)).toBeDefined()
-
-    // Exactly one row carries the focus ring.
     const focused = container.querySelectorAll('tbody tr.ring-1')
     expect(focused.length).toBe(1)
     expect(focused[0]!.textContent).toContain(task.id)
-  })
-
-  it('reports a task that does not exist', () => {
-    renderAt('/task/NOPE')
-    expect(screen.getByText(/No task/)).toBeDefined()
   })
 })
