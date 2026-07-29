@@ -115,7 +115,11 @@ function main(): number {
     ...graph.program.packages.map((p) => p.id),
   ]
 
-  const narrative = loadNarrative(NARRATIVE, slugs)
+  // Every slot has an optional `lead/` twin, rendered directly under the page
+  // title instead of at the foot. A subdirectory rather than an `M4.lead.md`
+  // suffix: `lead` is a valid ID segment, so a suffix could collide with a real
+  // package called `M4.lead`.
+  const narrative = loadNarrative(NARRATIVE, [...slugs, ...slugs.map((s) => `lead/${s}`)])
   if (narrative.orphans.length > 0) {
     console.error(new OrphanNarrativeError(narrative.orphans, NARRATIVE).message)
     console.error('\nNothing was generated.')

@@ -49,6 +49,7 @@ export function renderConventions(graph: ProgramGraph, narrative: Narrative): st
 
   return page('Conventions', [
     link('← Program', 'L0-program.md'),
+    narrative.partials.get('lead/conventions'),
     section('Identifier scheme', idScheme),
     section(
       'Task types',

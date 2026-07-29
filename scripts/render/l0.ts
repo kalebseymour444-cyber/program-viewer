@@ -64,6 +64,7 @@ export function renderL0(graph: ProgramGraph, narrative: Narrative): string {
   return page(`L0 — ${program.program.name}`, [
     program.program.description === undefined ? undefined : `_${program.program.description}_`,
     nav,
+    narrative.partials.get('lead/program'),
     section('Milestones', `${milestoneTable}\n\n${DURATION_NOTE}`),
     section('Dependency graph', renderMilestoneGraph(graph)),
     section('Critical path', renderCriticalPath(graph)),

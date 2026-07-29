@@ -46,6 +46,7 @@ export function renderGateRegister(graph: ProgramGraph, narrative: Narrative): s
 
   return page('Gate register', [
     NAV,
+    narrative.partials.get('lead/registers/gates'),
     '> A **gate** is a task whose exit criteria must be evidenced before any successor begins. Gate\n' +
       '> exit is measured, not asserted. If the criterion is not evidenced the gate is not closed,\n' +
       '> regardless of schedule pressure.',
@@ -76,6 +77,7 @@ export function renderDependencyRegister(graph: ProgramGraph, narrative: Narrati
 
   return page('Dependency register', [
     NAV,
+    narrative.partials.get('lead/registers/dependencies'),
     '> Dependencies **within** a milestone live in that milestone\'s pages. This register holds the\n' +
       '> cross-milestone ones — the dependencies nobody owns, because they span two owners.',
     section(
@@ -119,6 +121,7 @@ export function renderParallelizationRegister(
 ): string {
   return page('Parallelization register', [
     NAV,
+    narrative.partials.get('lead/registers/parallelization'),
     '> What can run at the same time, what cannot, and where parallel lanes collapse into a single\n' +
       '> point. Every figure is derived from the pessimistic schedule.',
     section('Convergence points', renderConvergence(graph)),

@@ -167,6 +167,25 @@ describe('narrative partials (D10)', () => {
     rmSync(root, { recursive: true })
   })
 
+  it('renders a lead partial above the data, and the body partial below it', () => {
+    // The milestone's framing statement has to arrive before the reader works
+    // through three tables, not after.
+    const root = withNarrative({ 'lead/M1': 'THE FRAMING', M1: 'THE SEAM NOTES' })
+    const narrative = loadNarrative(root, ['M1', 'lead/M1'])
+    const page = renderL1(PROGRAM.milestones[0]!, GRAPH, narrative)
+
+    expect(page.indexOf('THE FRAMING')).toBeLessThan(page.indexOf('Approver'))
+    expect(page.indexOf('THE SEAM NOTES')).toBeGreaterThan(page.indexOf('Exit criteria'))
+    rmSync(root, { recursive: true })
+  })
+
+  it('needs no lead partial — the slot is simply empty', () => {
+    const root = withNarrative({ M1: 'body only' })
+    const narrative = loadNarrative(root, ['M1', 'lead/M1'])
+    expect(() => renderL1(PROGRAM.milestones[0]!, GRAPH, narrative)).not.toThrow()
+    rmSync(root, { recursive: true })
+  })
+
   it('treats a partial naming nothing in the program as an orphan', () => {
     const root = withNarrative({ M1: 'kept', M9: 'orphan' })
     const narrative = loadNarrative(root, ['M1'])

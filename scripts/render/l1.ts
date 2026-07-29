@@ -76,6 +76,7 @@ export function renderL1(
 
   return page(`${milestone.id} — ${milestone.name}`, [
     breadcrumb,
+    narrative.partials.get(`lead/${milestone.id}`),
     facts,
     section(
       'Work packages',

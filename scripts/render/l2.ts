@@ -58,6 +58,7 @@ export function renderL2(
 
   return page(`${milestone.id} — Tasks`, [
     breadcrumb,
+    narrative.partials.get(`lead/${milestone.id}-tasks`),
     table(
       [
         'ID',

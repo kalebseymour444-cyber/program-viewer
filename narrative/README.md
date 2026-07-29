@@ -26,6 +26,23 @@ A file naming something that does not exist in `program.yaml` **fails the build*
 documents nothing is worse than no prose: it still reads as current. A missing file is fine — the
 slot is simply empty.
 
+## Two slots per page
+
+Every slot has an optional twin under `lead/`, rendered directly beneath the page title instead of at
+the foot:
+
+```
+narrative/lead/M4.md   → under the title, before the tables
+narrative/M4.md        → after the exit criteria, at the foot
+```
+
+The lead is for the one statement that tells a reader why they are on this page — the framing, not the
+detail. Everything else belongs in the body partial, after the data, where it reads as reference
+material rather than as a preamble to be scrolled past.
+
+A subdirectory rather than an `M4.lead.md` suffix, because `lead` is a grammatically valid ID segment:
+a package really could be called `M4.lead`, and a suffix convention would collide with it.
+
 ## The one rule
 
 **No structural claims.** No durations, no dependency assertions, no counts, no "longest", no
