@@ -1,0 +1,57 @@
+@import 'tailwindcss';
+
+/* Dark is the default; the toggle adds/removes .dark on <html>. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-mono: ui-monospace, 'SF Mono', 'Cascadia Mono', 'Roboto Mono', Menlo, Consolas, monospace;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+/*
+ * Status colours.
+ *
+ * The hard rule (SPEC §3, §5): AT_RISK is NEVER green, and AT_RISK and
+ * IN_PROGRESS must be visually distinct — not two shades of the same hue.
+ * IN_PROGRESS is cyan, AT_RISK is amber. They differ in hue, not brightness,
+ * so they stay distinguishable in greyscale and to a red-green colourblind
+ * reader, which two shades of the same colour would not.
+ *
+ * These are the only place status colour is defined. A component that reaches
+ * for a raw colour instead is how "at risk" quietly becomes reassuring.
+ */
+:root {
+  --status-not-started: oklch(0.62 0.02 260);
+  --status-in-progress: oklch(0.75 0.14 220);
+  --status-at-risk: oklch(0.78 0.16 75);
+  --status-blocked: oklch(0.65 0.21 25);
+  --status-complete: oklch(0.72 0.15 155);
+
+  --gate: oklch(0.78 0.16 75);
+  --critical: oklch(0.68 0.20 15);
+}
+
+html {
+  color-scheme: light;
+}
+html.dark {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Dense technical readout, not a marketing page (SPEC §5). */
+body {
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+/* Focus visible everywhere — keyboard navigation is a requirement, not a nicety. */
+:focus-visible {
+  outline: 2px solid var(--status-in-progress);
+  outline-offset: 2px;
+}

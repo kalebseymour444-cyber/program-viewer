@@ -36,10 +36,17 @@ function serializeScenario(scenario: ScenarioGraph) {
   }
 }
 
-export function renderJson(graph: ProgramGraph): string {
+/**
+ * The document the app consumes. Exported so `src/` imports this exact type
+ * rather than declaring its own copy — two hand-maintained descriptions of one
+ * payload is the same divergence problem SPEC §2 is about, one level down.
+ */
+export type ProgramDocument = ReturnType<typeof buildDocument>
+
+function buildDocument(graph: ProgramGraph) {
   const { program } = graph
 
-  const document = {
+  return {
     program: program.program,
     roles: program.roles,
 
@@ -69,6 +76,8 @@ export function renderJson(graph: ProgramGraph): string {
       pessimistic: serializeScenario(graph.pessimistic),
     },
   }
+}
 
-  return `${JSON.stringify(document, null, 2)}\n`
+export function renderJson(graph: ProgramGraph): string {
+  return `${JSON.stringify(buildDocument(graph), null, 2)}\n`
 }

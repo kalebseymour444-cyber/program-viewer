@@ -1,0 +1,89 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# Least privilege: the build job needs none of these, and only the deploy job
+# gets the Pages token.
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # Fail loudly on a schema violation or any dependency cycle (SPEC §7).
+      - name: Validate
+        run: npm run validate
+
+      - name: Test
+        run: npm test
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Generate
+        run: npm run generate
+
+      # content/ and public/program.json are committed build artifacts. If
+      # regenerating changes them, either someone hand-edited generated output
+      # or someone changed program.yaml without regenerating. Both make the
+      # committed documents disagree with the source of truth, which is the
+      # exact failure SPEC §2 exists to prevent — so it fails the build rather
+      # than being silently fixed up here.
+      - name: Check generated output is committed and current
+        run: |
+          if ! git diff --quiet -- content public; then
+            echo "::error::Generated output is out of date. Run 'npm run generate' and commit the result."
+            git diff --stat -- content public
+            git diff -- content public | head -200
+            exit 1
+          fi
+          echo "Generated output matches program.yaml."
+
+      - name: Build
+        # GitHub Pages serves a project site from /<repo>/. Derived from the
+        # repository name so nothing here breaks when the repo is renamed or
+        # forked.
+        env:
+          VITE_BASE: /${{ github.event.repository.name }}/
+        run: npx vite build
+
+      - name: Upload Pages artifact
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+
+    permissions:
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

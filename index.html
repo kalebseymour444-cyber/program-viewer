@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Program Viewer</title>
+    <meta name="description" content="A layered program model — milestones, work packages, and tasks, with every rollup derived." />
+    <script>
+      // Applied before first paint so the page never flashes light then dark.
+      // Dark is the default (SPEC §5); an explicit choice overrides it.
+      try {
+        if (localStorage.getItem('theme') === 'light') {
+          document.documentElement.classList.remove('dark')
+        }
+      } catch {}
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
