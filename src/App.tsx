@@ -4,7 +4,9 @@ import { Layout, ScenarioProvider } from './components/Layout.js'
 import { ProgramContext, loadProgram, type ProgramDocument } from './lib/program.js'
 import { ProgramView } from './routes/Program.js'
 import { MilestoneView } from './routes/Milestone.js'
-import { PackageView, TaskView } from './routes/Package.js'
+import { PackageView } from './routes/Package.js'
+import { TaskFocusView } from './routes/Task.js'
+import { GraphView } from './routes/Graph.js'
 
 /**
  * Hash routing, not browser routing.
@@ -39,9 +41,10 @@ export function App() {
           <Layout>
             <Routes>
               <Route path="/" element={<ProgramView />} />
+              <Route path="/graph" element={<GraphView />} />
               <Route path="/milestone/:milestoneId" element={<MilestoneView />} />
               <Route path="/package/:packageId" element={<PackageView />} />
-              <Route path="/task/:taskId" element={<TaskView />} />
+              <Route path="/task/:taskId" element={<TaskFocusView />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Layout>

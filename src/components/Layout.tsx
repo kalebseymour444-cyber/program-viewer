@@ -1,4 +1,5 @@
 import { type ReactNode, createContext, useContext, useEffect, useState } from 'react'
+import { NavLink } from 'react-router-dom'
 import type { Scenario } from '../lib/program.js'
 import { DEFAULT_SCENARIO, useProgram } from '../lib/program.js'
 
@@ -83,6 +84,24 @@ function ThemeToggle() {
   )
 }
 
+function NavItem({ to, children }: { to: string; children: ReactNode }) {
+  return (
+    <NavLink
+      to={to}
+      end={to === '/'}
+      className={({ isActive }) =>
+        `font-mono text-[11px] uppercase tracking-wider ${
+          isActive
+            ? 'text-slate-900 dark:text-slate-100'
+            : 'text-slate-400 hover:text-slate-700 dark:text-slate-500 dark:hover:text-slate-300'
+        }`
+      }
+    >
+      {children}
+    </NavLink>
+  )
+}
+
 export function Layout({ children }: { children: ReactNode }) {
   const program = useProgram()
 
@@ -92,8 +111,12 @@ export function Layout({ children }: { children: ReactNode }) {
         <div className="mx-auto max-w-[1600px] px-4 py-2 flex flex-wrap items-center gap-x-6 gap-y-2">
           <div className="flex items-baseline gap-3 mr-auto min-w-0">
             <h1 className="font-mono text-sm text-slate-900 dark:text-slate-100 truncate">{program.program.name}</h1>
+            <nav className="flex items-baseline gap-2">
+              <NavItem to="/">L0</NavItem>
+              <NavItem to="/graph">Graph</NavItem>
+            </nav>
             {program.program.description !== undefined && (
-              <span className="hidden sm:inline text-xs text-slate-500 dark:text-slate-500 truncate">
+              <span className="hidden md:inline text-xs text-slate-500 dark:text-slate-500 truncate">
                 {program.program.description}
               </span>
             )}

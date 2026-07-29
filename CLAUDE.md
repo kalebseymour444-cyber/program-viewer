@@ -195,7 +195,11 @@ commit — versioned definitions and sign-off as code review, for free. Lean int
 - [x] 5. App shell + deploy to Pages — `src/`, L0 view, hash routing, CI workflow
 - [x] 6. Drill-down L0 → L1 → L2 — L1/L2 routes, breadcrumbs, deep links, sortable/filterable
       task table, 8 tests. Every level renders the shipped rollup; no ID slicing.
-- [ ] 7. Graph view + chain highlighting — **show the plan first**
+- [x] 7. Graph view + chain highlighting — React Flow + dagre. `/graph` (all tasks, filterable,
+      select→highlight up/downstream, dim the rest, chain panel with longest-span callout,
+      `?focus=` deep link) and `/task/:id` focus view. Reuses the tested `closureOf` — the browser
+      never re-walks the graph. NOTE: React Flow needs a *visible* browser (ResizeObserver) to
+      measure/lay out; it renders blank under a hidden/headless pane.
 - [ ] 8. Timeline view
 - [ ] 9. Search, filters, keyboard nav, polish
 
