@@ -144,8 +144,8 @@ Keep this list accurate as phases land.
 | `npm test` | ✅ phase 1 | Vitest. Graph computation above all, once it exists. |
 | `npm run typecheck` | ✅ phase 1 | `tsc --noEmit` |
 | `npm run generate` | ✅ phase 4 | `program.yaml` + `narrative/` → `public/program.json` + `content/**` |
-| `npm run dev` | phase 5 | Vite dev server |
-| `npm run build` | phase 5 | Validate → generate → production build |
+| `npm run dev` | ✅ phase 5 | Vite dev server |
+| `npm run build` | ✅ phase 5 | Validate → generate → production build |
 
 `scripts/import-markdown.ts` is a **one-time** migration helper that has already run. It is the only
 markdown parser this repository is allowed to contain, and it exists to end markdown-as-source, not to
@@ -192,7 +192,7 @@ commit — versioned definitions and sign-off as code review, for free. Lean int
 - [x] 2. Import helper (throwaway) — `program.yaml` drafted; **see `docs/import-review.md`**
 - [x] 3. Graph computation — `graph/`, 167 tests. Cycles now fail `npm run validate`.
 - [x] 4. Generator — `scripts/generate.ts` + `scripts/render/`, 22 files, 58 tests
-- [ ] 5. App shell + deploy to Pages
+- [x] 5. App shell + deploy to Pages — `src/`, L0 view, hash routing, CI workflow
 - [ ] 6. Drill-down L0 → L1 → L2
 - [ ] 7. Graph view + chain highlighting — **show the plan first**
 - [ ] 8. Timeline view
