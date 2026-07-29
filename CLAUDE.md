@@ -143,7 +143,7 @@ Keep this list accurate as phases land.
 | `npm run validate` | ✅ phase 1 | Validate `program.yaml` — schema, references, **and cycles**. Takes a path argument. |
 | `npm test` | ✅ phase 1 | Vitest. Graph computation above all, once it exists. |
 | `npm run typecheck` | ✅ phase 1 | `tsc --noEmit` |
-| `npm run generate` | phase 4 | `program.yaml` → `public/program.json` + `content/**` |
+| `npm run generate` | ✅ phase 4 | `program.yaml` + `narrative/` → `public/program.json` + `content/**` |
 | `npm run dev` | phase 5 | Vite dev server |
 | `npm run build` | phase 5 | Validate → generate → production build |
 
@@ -191,7 +191,7 @@ commit — versioned definitions and sign-off as code review, for free. Lean int
 - [x] 1. Schema + validation — `schema/`, 70 tests, `npm run validate`
 - [x] 2. Import helper (throwaway) — `program.yaml` drafted; **see `docs/import-review.md`**
 - [x] 3. Graph computation — `graph/`, 167 tests. Cycles now fail `npm run validate`.
-- [ ] 4. Generator
+- [x] 4. Generator — `scripts/generate.ts` + `scripts/render/`, 22 files, 58 tests
 - [ ] 5. App shell + deploy to Pages
 - [ ] 6. Drill-down L0 → L1 → L2
 - [ ] 7. Graph view + chain highlighting — **show the plan first**
