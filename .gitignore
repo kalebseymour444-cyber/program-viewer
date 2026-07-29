@@ -1,0 +1,11 @@
+node_modules/
+dist/
+coverage/
+*.log
+.DS_Store
+.vite/
+
+# NOTE: content/ and public/program.json are generated but are NOT ignored.
+# They are committed deliberately — the site must render on GitHub and in
+# Obsidian straight from the repo, and status changes are meant to show up as
+# reviewable diffs in a pull request (SPEC §7).

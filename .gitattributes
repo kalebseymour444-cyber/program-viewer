@@ -1,0 +1,6 @@
+# Generated markdown must be byte-stable across platforms, or every regeneration
+# on a different OS shows as a whole-file diff. Normalise to LF in the repo.
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.ico binary
