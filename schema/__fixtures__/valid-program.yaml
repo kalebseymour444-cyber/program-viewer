@@ -1,0 +1,178 @@
+# A minimal, VALID program used as the baseline for every schema test.
+#
+# Deliberately not a data centre. SPEC §9 requires that nothing domain-specific
+# is hardcoded and that a different program.yaml produces a working site — an
+# acceptance criterion is worth more as a fixture than as a promise. If a change
+# to the schema or the app can only be made to work for the data hall model,
+# this file is where that shows up.
+#
+# It is small but exercises every decision D1-D7 and every conditional rule:
+#
+#   duration as {min,max}        M1.1.1, M1.2.1, M2.1.2, M2.2.x
+#   duration as bare shorthand   M1.1.2, M2.1.1, M3.1.1
+#   duration absent (D4)         M1.2.2
+#   external root, no preds (D5) M2.2.1        (mirrors the `construction` anchor)
+#   external with preds          M1.2.2        (mirrors M2.1.3 permitting)
+#   two owners on a HYB task     M2.1.3
+#   gate + criterion + evidence  M1.1.3, M2.1.3, M3.1.2
+#   AT_RISK   + status_since     M1.2.2
+#   BLOCKED   + status_since     M2.2.3
+#   status omitted -> default    most tasks
+#   intra-milestone convergence  M1.1.3
+#   cross-milestone edge         M3.1.1 <- M1.1.3
+#   multi-lane convergence       M3.1.2 <- M2.2.3, M3.1.1
+
+program:
+  id: field-guide-2e
+  name: Field Guide, Second Edition
+  description: Manuscript to publication day
+
+roles:
+  - { id: ED,  name: Editorial }
+  - { id: DES, name: Design }
+  - { id: PRT, name: Print Vendor }
+  - { id: MKT, name: Marketing }
+  - { id: LEG, name: Rights and Permissions }
+
+milestones:
+  - id: M1
+    name: Manuscript Locked
+    approver: ED
+  - id: M2
+    name: Print Run Delivered
+    approver: PRT
+  - id: M3
+    name: Published
+    approver: MKT
+
+packages:
+  - { id: M1.1, milestone: M1, name: Editorial pass,      type: DOC, owners: [ED] }
+  - { id: M1.2, milestone: M1, name: Rights clearance,    type: DOC, owners: [LEG] }
+  - { id: M2.1, milestone: M2, name: Design and prepress, type: DOC, owners: [DES] }
+  - { id: M2.2, milestone: M2, name: Manufacture,         type: PHY, owners: [PRT] }
+  - { id: M3.1, milestone: M3, name: Launch campaign,     type: DOC, owners: [MKT] }
+
+tasks:
+  - id: M1.1.1
+    package: M1.1
+    name: Structural edit
+    type: DOC
+    owners: [ED]
+    duration: { min: 10, max: 15 }
+    status: COMPLETE
+
+  - id: M1.1.2
+    package: M1.1
+    name: Line edit
+    type: DOC
+    owners: [ED]
+    duration: 8
+    predecessors: [M1.1.1]
+    status: IN_PROGRESS
+    status_since: 2026-07-14
+
+  - id: M1.1.3
+    package: M1.1
+    name: Manuscript locked
+    type: DOC
+    owners: [ED]
+    duration: 1
+    predecessors: [M1.1.2, M1.2.2]
+    gate: true
+    criterion: No further text changes accepted; all permissions in hand
+    evidence: Signed lock-off record
+
+  - id: M1.2.1
+    package: M1.2
+    name: Permissions audit
+    type: DOC
+    owners: [LEG]
+    duration: { min: 5, max: 20 }
+    predecessors: [M1.1.1]
+    status: COMPLETE
+
+  - id: M1.2.2
+    package: M1.2
+    name: Third-party rights cleared by estates
+    type: DOC
+    owners: [LEG]
+    predecessors: [M1.2.1]
+    external: true
+    status: AT_RISK
+    status_since: 2026-06-30
+    note: Two estates unresponsive. No duration — the interval is the estates', not ours.
+
+  - id: M2.1.1
+    package: M2.1
+    name: Interior layout
+    type: DOC
+    owners: [DES]
+    duration: 12
+    predecessors: [M1.1.3]
+
+  - id: M2.1.2
+    package: M2.1
+    name: Cover design
+    type: DOC
+    owners: [DES]
+    duration: { min: 6, max: 10 }
+    predecessors: [M1.1.3]
+
+  - id: M2.1.3
+    package: M2.1
+    name: Press check on site
+    type: HYB
+    owners: [DES, PRT]
+    duration: 1
+    predecessors: [M2.1.1, M2.1.2]
+    gate: true
+    criterion: Colour approved against proof, on the production stock
+    evidence: Signed press sheet
+    note: Designer and printer both present at the press — the seam, not just a step.
+
+  - id: M2.2.1
+    package: M2.2
+    name: Paper stock allocated by mill
+    type: PHY
+    owners: [PRT]
+    duration: { min: 5, max: 30 }
+    external: true
+    note: Mill allocation queue. Externally controlled, no predecessor inside the program.
+
+  - id: M2.2.2
+    package: M2.2
+    name: Print run
+    type: PHY
+    owners: [PRT]
+    duration: { min: 15, max: 40 }
+    predecessors: [M2.1.3, M2.2.1]
+
+  - id: M2.2.3
+    package: M2.2
+    name: Delivery to warehouse
+    type: PHY
+    owners: [PRT]
+    duration: { min: 3, max: 10 }
+    predecessors: [M2.2.2]
+    status: BLOCKED
+    status_since: 2026-07-20
+
+  - id: M3.1.1
+    package: M3.1
+    name: Review copies mailed
+    type: DOC
+    owners: [MKT]
+    duration: 2
+    predecessors: [M1.1.3]
+    note: Long reach — depends on manuscript lock, not on the print run.
+
+  - id: M3.1.2
+    package: M3.1
+    name: Publication day
+    type: DOC
+    owners: [MKT]
+    duration: 1
+    predecessors: [M2.2.3, M3.1.1]
+    gate: true
+    criterion: Stock in warehouse and embargo lifted
+    evidence: Warehouse receipt and confirmed on-sale date

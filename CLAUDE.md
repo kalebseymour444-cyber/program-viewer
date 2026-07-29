@@ -120,14 +120,22 @@ Fail the build — not warn, not skip — on:
 
 ## Commands
 
-Not yet scaffolded — create these as the phases land, and keep this list accurate.
+Keep this list accurate as phases land.
 
-| Command | Does |
-|---|---|
-| `npm run generate` | `program.yaml` → `public/program.json` + `content/**` |
-| `npm test` | Unit tests (graph computation above all) |
-| `npm run dev` | Vite dev server |
-| `npm run build` | Validate → generate → production build |
+| Command | Status | Does |
+|---|---|---|
+| `npm run validate` | ✅ phase 1 | Validate `program.yaml`. Takes a path argument. |
+| `npm test` | ✅ phase 1 | Vitest. Graph computation above all, once it exists. |
+| `npm run typecheck` | ✅ phase 1 | `tsc --noEmit` |
+| `npm run generate` | phase 4 | `program.yaml` → `public/program.json` + `content/**` |
+| `npm run dev` | phase 5 | Vite dev server |
+| `npm run build` | phase 5 | Validate → generate → production build |
+
+`program.yaml` does not exist yet — it is produced in phase 2. Until then:
+
+```
+npm run validate -- schema/__fixtures__/valid-program.yaml
+```
 
 Acceptance target: a clean clone works with `npm install && npm run generate && npm run build`.
 
@@ -165,7 +173,7 @@ commit — versioned definitions and sign-off as code review, for free. Lean int
 
 ## Build order (SPEC §8) — current position
 
-- [ ] 1. Schema + validation
+- [x] 1. Schema + validation — `schema/`, 70 tests, `npm run validate`
 - [ ] 2. Import helper (throwaway)
 - [ ] 3. Graph computation — **unit-tested. Show the plan first.**
 - [ ] 4. Generator
