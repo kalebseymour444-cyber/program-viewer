@@ -7,23 +7,27 @@
 > Dependencies **within** a milestone live in that milestone's pages. This register holds the
 > cross-milestone ones — the dependencies nobody owns, because they span two owners.
 
-## Cross-milestone edges (21)
+## Cross-milestone edges (25)
 
 | From |  | To |  | Span | Reach |
 |---|---|---|---|---|---|
-| `M5.2.2` | Storage power & fluid (if liquid-cooled) termination | `M7.8.1` | Storage mounts & throughput spot-check | M5 → M7 | 88d |
-| `M6.4.2` | Asset records loaded to inventory system | `M7.4.2` | Reconcile serial ↔ MAC ↔ rack/slot ↔ as-built matrix | M6 → M7 | 63d |
-| `M5.6.4` | Leaf ports for compute pre-configured & verified up | `M7.5.1` | Subnet manager / control plane extended to compute leaf ports | M5 → M7 | 51d |
-| `M6.8.3` | Patching matrix updated to as-built | `M7.4.2` | Reconcile serial ↔ MAC ↔ rack/slot ↔ as-built matrix | M6 → M7 | 27d |
+| `M5.2.2` | Storage power & fluid (if liquid-cooled) termination | `M7.8.1` | Storage mounts & throughput spot-check | M5 → M7 | 165d |
+| `M6.4.2` | Asset records loaded to inventory system | `M7.4.2` | Reconcile serial ↔ MAC ↔ rack/slot ↔ as-built matrix | M6 → M7 | 56d |
+| `M5.6.4` | Leaf ports for compute pre-configured & verified up | `M7.5.1` | Subnet manager / control plane extended to compute leaf ports | M5 → M7 | 47d |
+| `M6.8.3` | Patching matrix updated to as-built | `M7.4.2` | Reconcile serial ↔ MAC ↔ rack/slot ↔ as-built matrix | M6 → M7 | 23d |
 | `M4.1.2` | Hall sealed; construction dust protocol in force | `M3.1.1` | Overhead coordination walk — tray vs. mech vs. elec, resolved on site | M4 → M3 | 15d |
+| `M3.6.4` | Certification package delivered — payment milestone | `M5.5.1` | Spine–leaf trunk install per patching matrix | M3 → M5 | 6d |
 | `M1.1.5` | Overhead coordination model — tray vs. mech vs. elec | `M3.1.1` | Overhead coordination walk — tray vs. mech vs. elec, resolved on site | M1 → M3 | 5d |
+| `M1.1.3` | Power layout — busway runs, RPP placement, whip schedule | `M4.2.1` | Busway install & energization | M1 → M4 | 4d |
+| `M1.1.4` | Fluid layout — CDU placement, manifold runs, QD schedule | `M4.3.1` | CDU set, piped, and powered | M1 → M4 | 4d |
 | `M1.1.2` | Floor plan with rack coordinates, aisle containment | `M2.1.1` | Entrance facility siting — A and B, physically separated | M1 → M2 | 3d |
+| `M1.1.2` | Floor plan with rack coordinates, aisle containment | `M4.1.3` | Hot/cold aisle containment installed | M1 → M4 | 3d |
 | `M4.1.2` | Hall sealed; construction dust protocol in force | `M3.2.1` | MDA cabinet install & anchoring | M4 → M3 | 3d |
 | `M4.1.2` | Hall sealed; construction dust protocol in force | `M3.3.1` | HDA cabinet install per row | M4 → M3 | 3d |
 | `M6.6.3` | Flow & delta-T verified per rack | `M7.1.2` | Sequential power-on per plan | M6 → M7 | 3d |
-| `M3.6.4` | Certification package delivered — payment milestone | `M5.5.1` | Spine–leaf trunk install per patching matrix | M3 → M5 | 2d |
 | `M5.5.3` | 100% spine–leaf link certification | `M6.7.1` | Scale-out cable pull rack → HDA | M5 → M6 | 2d |
 | `M2.7.4` | OOB reachability proven with primary path down | `M5.4.3` | OOB reachability proven from remote, production path down | M2 → M5 | 1d |
+| `M2.8.4` | WAN acceptance signed | `M7.7.1` | Image build & pin — OS, driver, CUDA, NCCL, DOCA | M2 → M7 | 1d |
 | `M4.6.3` | Laydown & storage areas designated and published | `M6.1.1` | Delivery schedule built against laydown capacity & crew throughput | M4 → M6 | 1d |
 | `M4.7.3` | Handover accepted — signed by construction and deployment | `M5.1.1` | Network cabinet delivery & staging | M4 → M5 | 1d |
 | `M4.7.3` | Handover accepted — signed by construction and deployment | `M5.2.1` | Storage rack delivery, placement, anchor | M4 → M5 | 1d |

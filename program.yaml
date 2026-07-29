@@ -1285,6 +1285,7 @@ tasks:
       - GC
     predecessors:
       - M4.1.2
+      - M1.1.2
     duration:
       min: 5
       max: 5
@@ -1307,6 +1308,7 @@ tasks:
       - ELEC
     predecessors:
       - M4.1.2
+      - M1.1.3
     duration:
       min: 10
       max: 10
@@ -1362,6 +1364,7 @@ tasks:
       - MECH
     predecessors:
       - M4.1.2
+      - M1.1.4
     duration:
       min: 8
       max: 8
@@ -2353,9 +2356,15 @@ tasks:
       - NET-R
     predecessors:
       - M7.3.4
+      - M2.8.4
     duration:
       min: 3
       max: 3
+    note: >-
+      Depends on accepted WAN. Out-of-band is a console path, not a data path —
+      pulling the OS, driver and CUDA/NCCL/DOCA stack for the fleet needs the
+      production path. This edge is what makes WAN acceptance gate delivery
+      rather than run alongside it.
   - id: M7.7.2
     package: M7.7
     name: Bare-metal provisioning fleet-wide

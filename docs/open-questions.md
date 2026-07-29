@@ -194,11 +194,53 @@ generated from the schema/roles registry, hand-written outside `content/`, or dr
 These are real defects in the legacy data that the rollup will expose. Each needs a human decision —
 add the missing edge, or accept that the authored L0 was wrong.
 
-> **Confirmed by the phase 2 import, 2026-07-28.** These were found by reading; the importer then
-> reproduced them mechanically by diffing the authored L0 "Depends on" column against the edges rolled
-> up from the task tables. Q10, Q11 and Q12 are exactly as described below — see the reconciliation
-> section of `docs/import-review.md`. **Still undecided.** The importer deliberately did not invent the
-> missing edges; `program.yaml` currently encodes what the task tables say, not what L0 claims.
+> **RESOLVED 2026-07-28 by D12 — four edges added to `program.yaml`.** Found by reading, confirmed
+> mechanically by the importer's reconciliation pass, then resolved by hand once phase 3 could show
+> what each candidate edge did to the schedule. The entries below are kept as the record of what was
+> wrong and how it was found.
+
+**D12 — Four missing edges added, resolving Q10 and Q11.**
+
+*Q10 — M4 had no dependency on M1.* Three edges, each supported by the task names themselves:
+
+| edge | why |
+|---|---|
+| `M1.1.2 → M4.1.3` | containment cannot be installed without the floor plan that specifies it |
+| `M1.1.3 → M4.2.1` | busway cannot be installed without the power layout defining its runs |
+| `M1.1.4 → M4.3.1` | the CDU cannot be set without the fluid layout defining its placement |
+
+Schedule effect: **none** — the project stayed at 211 days at the time, and M4 was not on the critical
+path either way. This was a correctness fix. It stops M4 rendering as a root node that may begin on day
+zero, which is what the L1 page was showing.
+
+*Q11 — M7 had no dependency on M2.* One edge: **`M2.8.4 → M7.7.1`**, WAN acceptance to image build.
+
+Out-of-band is a console path, not a data path. Pulling an OS, driver and CUDA/NCCL/DOCA stack for the
+fleet needs the production WAN, so provisioning cannot precede WAN acceptance. Three anchors were
+evaluated against the computed schedule before choosing:
+
+| candidate | project | critical path |
+|---|---|---|
+| `M2.8.4 → M7.7.1` image build | 247d | `M1 → M2 → M7 → M8` |
+| `M2.8.4 → M7.9.2` alert routing | 239d | `M1 → M2 → M7 → M8` |
+| `M2.8.4 → M8.8.4` customer access | 212d | `M1 → M2 → M8` |
+
+`M7.7.1` was chosen: it is the earliest point where the production path is genuinely required, and it
+reproduces the critical path L0 asserted all along.
+
+**What this fixed.** The programme no longer finishes before the WAN is accepted. Under the old data
+M8 completed on day 163 while M2 ran to 211 — the model asserting that clusters went live 48 days
+before the WAN was signed off. M8 is now the terminal milestone at day 247, and the computed critical
+path is `M1 → M2 → M7 → M8`, exactly as the legacy L0 always claimed.
+
+The 36-day increase is not the WAN getting slower. It is provisioning no longer being permitted to
+overlap with the WAN build, which is the entire point of the edge.
+
+*Q12 — M5 depends on M2* remains true and is now unremarkable: M2 legitimately feeds forward rather
+than dangling.
+
+The two integration tests that pinned these defects failed the moment the edges were added, which was
+their purpose. They now pin the fix instead.
 
 **Q10 — M4 has no dependency on M1.** The legacy L0 table and the M4 L1 file both state "Depends on:
 M1". No task in `M4-tasks.md` references any M1 task. Derived, M4 is a **root node**. Either an edge is

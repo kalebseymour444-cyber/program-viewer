@@ -18,7 +18,7 @@
 | 🚨 `M2.2.6` | `M2` | Physical path diversity verified by field walk | Route survey + photos | — |
 | 🚨 `M2.7.4` | `M2` | OOB reachable with primary path down | Test record | `M2.8.4`, `M5.4.3` |
 | 🚨 `M2.8.3` | `M2` | A/B failover tested under load | Test record | `M2.8.4` |
-| 🚨 `M2.8.4` | `M2` | WAN acceptance signed | Signed acceptance | — |
+| 🚨 `M2.8.4` | `M2` | WAN acceptance signed | Signed acceptance | `M7.7.1` |
 | 🚨 `M4.1.2` | `M4` | Hall sealed, dust protocol in force | Inspection record | `M3.1.1`, `M3.2.1`, `M3.3.1`, `M4.1.3`, `M4.2.1`, `M4.3.1`, `M4.6.2` |
 | 🚨 `M3.1.1` | `M3` | Overhead coordination resolved on site, three trades present | Coordination walk record | `M3.1.2` |
 | 🚨 `M3.5.2` | `M3` | Label scheme reconciled to monitoring schema | Schema diff | — |

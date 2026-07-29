@@ -44,29 +44,42 @@ describe('the real programme', () => {
   })
 })
 
-describe('what the rollup says about the legacy assertions', () => {
-  // These pin Q10-Q12 as facts about the current data. When someone decides to
-  // add the missing edges, these tests fail — which is the intended signal,
-  // not a regression.
+describe('the edges added to resolve Q10 and Q11', () => {
+  // These pinned the DEFECTS while Q10-Q12 were open, and failed the moment the
+  // edges were added — which was the intended signal. They now pin the fix.
 
-  it('M4 is a root: it depends on nothing, despite L0 asserting M1', () => {
-    expect(graph.milestones.get('M4')!.dependsOn).toEqual([])
+  it('M4 depends on M1: design freeze feeds containment, busway and CDU (Q10)', () => {
+    expect(graph.milestones.get('M4')!.dependsOn).toContain('M1')
+
+    expect(graph.adjacency.predecessors.get('M4.1.3')).toContain('M1.1.2') // floor plan
+    expect(graph.adjacency.predecessors.get('M4.2.1')).toContain('M1.1.3') // power layout
+    expect(graph.adjacency.predecessors.get('M4.3.1')).toContain('M1.1.4') // fluid layout
   })
 
-  it('M7 does not depend on M2 directly, despite L0 asserting it', () => {
-    expect(graph.milestones.get('M7')!.dependsOn).not.toContain('M2')
+  it('M7 depends on M2: provisioning cannot pull an image over a console path (Q11)', () => {
+    expect(graph.milestones.get('M7')!.dependsOn).toContain('M2')
+    expect(graph.adjacency.predecessors.get('M7.7.1')).toContain('M2.8.4')
   })
 
-  it('M5 depends on M2, which L0 does not state', () => {
+  it('M5 still depends on M2, through OOB reachability (Q12)', () => {
     expect(graph.milestones.get('M5')!.dependsOn).toContain('M2')
   })
 
-  it('M2 reaches M7 only through M5', () => {
-    const upstreamOfM7 = new Set(
-      graph.milestones.get('M7')!.taskIds.flatMap((id) => graph.closure(id).upstream.map((n) => n.id)),
-    )
-    // There IS a path from M2 to M7 — it is just not a direct milestone edge.
-    expect([...upstreamOfM7].some((id) => id.startsWith('M2.'))).toBe(true)
+  it('the programme no longer finishes before the WAN is accepted', () => {
+    // The defect Q11 produced: with M2 dangling, the model said clusters went
+    // live 48 days BEFORE WAN acceptance. M8 must now be the terminal.
+    const m2 = graph.pessimistic.milestones.get('M2')!
+    const m8 = graph.pessimistic.milestones.get('M8')!
+
+    expect(m8.earliestFinish).toBeGreaterThanOrEqual(m2.earliestFinish)
+    expect(m8.earliestFinish).toBe(graph.pessimistic.schedule.projectDuration)
+  })
+
+  it('reproduces the critical path L0 always claimed: M1 → M2 → M7 → M8', () => {
+    const milestones = [
+      ...new Set(graph.pessimistic.schedule.criticalChain.map((id) => id.split('.')[0]!)),
+    ]
+    expect(milestones).toEqual(['M1', 'M2', 'M7', 'M8'])
   })
 })
 
