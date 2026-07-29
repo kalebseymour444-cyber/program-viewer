@@ -1,0 +1,2790 @@
+# FIRST DRAFT — imported from datahall-bringup/ by scripts/import-markdown.ts.
+# Reviewed by: (nobody yet)
+#
+# Read docs/import-review.md before trusting anything in this file. It lists
+# every guess, every dropped field, and every place the legacy L0 disagrees
+# with the dependency graph its own task tables describe.
+#
+# From here on this file is the single hand-edited source of truth (SPEC §2).
+# content/ and public/program.json are generated from it and must never be
+# edited directly.
+
+program:
+  id: datahall-bringup
+  name: Data Hall Bring-Up
+  description: Meet-me room to clusters live
+roles:
+  - id: PM
+    name: Program management
+  - id: GC
+    name: General contractor
+  - id: MECH
+    name: Mechanical
+  - id: ELEC
+    name: Electrical
+  - id: ICT
+    name: Structured cabling contractor
+  - id: NET-R
+    name: Remote network engineering
+  - id: NET-F
+    name: Field network
+  - id: OPS
+    name: Site operations
+  - id: LOG
+    name: Logistics/receiving
+  - id: SEC
+    name: Security
+  - id: AHJ
+    name: Authority having jurisdiction
+  - id: VEN
+    name: Vendor/OEM
+  - id: CX
+    name: Commissioning agent
+  - id: CUST
+    name: Customer
+milestones:
+  - id: M1
+    name: Design Freeze & Procurement Released
+    approver: PM
+  - id: M2
+    name: Network Live (WAN)
+    approver: NET-R
+  - id: M3
+    name: Backbone Cabling Complete
+    approver: ICT
+  - id: M4
+    name: White Space Accepted
+    approver: CX
+  - id: M5
+    name: Fabric Infrastructure Ready
+    approver: NET-R
+  - id: M6
+    name: Compute Deployed
+    approver: PM
+  - id: M7
+    name: Cluster Provisioned
+    approver: NET-R
+  - id: M8
+    name: Validated & Accepted
+    approver: CUST
+packages:
+  - id: M1.1
+    milestone: M1
+    name: Design documentation freeze — elevations, floor plan, power layout, containment
+    type: DOC
+    owners:
+      - PM
+  - id: M1.2
+    milestone: M1
+    name: Patching matrix & ICT cutsheets issued
+    type: DOC
+    owners:
+      - NET-R
+  - id: M1.3
+    milestone: M1
+    name: BOM derivation; OFCI/CFCI split decided and written
+    type: DOC
+    owners:
+      - PM
+  - id: M1.4
+    milestone: M1
+    name: Long-lead procurement released — optics, trunks, switches, cabinets, PDUs
+    type: DOC
+    owners:
+      - PM
+  - id: M1.5
+    milestone: M1
+    name: ICT contractor award — BICSI + manufacturer certified; retention-through-validation term
+    type: DOC
+    owners:
+      - PM
+  - id: M1.6
+    milestone: M1
+    name: Definition of done ratified and signed
+    type: DOC
+    owners:
+      - CUST
+  - id: M2.1
+    milestone: M2
+    name: Entrance facility construction — A/B diverse conduit, separate building entries
+    type: PHY
+    owners:
+      - GC
+  - id: M2.2
+    milestone: M2
+    name: OSP fiber build — permitting, ROW, trenching, splicing, testing
+    type: PHY
+    owners:
+      - ICT
+      - VEN
+  - id: M2.3
+    milestone: M2
+    name: Carrier circuit provisioning — orders placed, LOAs, cross-connect requests
+    type: DOC
+    owners:
+      - NET-R
+  - id: M2.4
+    milestone: M2
+    name: MMR build-out — racks, splice enclosures, patch fields, demarcation rack
+    type: PHY
+    owners:
+      - ICT
+  - id: M2.5
+    milestone: M2
+    name: Cross-connects — carrier demarc → Fluidstack demarc rack
+    type: HYB
+    owners:
+      - ICT
+      - NET-R
+  - id: M2.6
+    milestone: M2
+    name: Edge/DCI equipment install & config — border routers, DWDM transponders
+    type: HYB
+    owners:
+      - NET-F
+      - NET-R
+  - id: M2.7
+    milestone: M2
+    name: OOB circuit provisioning — independent path, independent carrier
+    type: HYB
+    owners:
+      - NET-R
+  - id: M2.8
+    milestone: M2
+    name: WAN acceptance testing — throughput, latency, jitter, A/B failover
+    type: DIG
+    owners:
+      - NET-R
+  - id: M3.1
+    milestone: M3
+    name: Pathway & conveyance install — tray, ladder rack, basket
+    type: PHY
+    owners:
+      - ICT
+  - id: M3.2
+    milestone: M3
+    name: MDA build-out — cabinets, patch fields, grounding
+    type: PHY
+    owners:
+      - ICT
+  - id: M3.3
+    milestone: M3
+    name: HDA build-out per row
+    type: PHY
+    owners:
+      - ICT
+  - id: M3.4
+    milestone: M3
+    name: Backbone trunk install MDA → HDA
+    type: PHY
+    owners:
+      - ICT
+  - id: M3.5
+    milestone: M3
+    name: Labeling per ANSI/TIA-606, matched to monitoring schema
+    type: DOC
+    owners:
+      - ICT
+  - id: M3.6
+    milestone: M3
+    name: Tier 1 + Tier 2 certification, 100% of links
+    type: DIG
+    owners:
+      - ICT
+  - id: M4.1
+    milestone: M4
+    name: Envelope sealed, containment installed, temp/humidity controlled
+    type: PHY
+    owners:
+      - GC
+  - id: M4.2
+    milestone: M4
+    name: Electrical distribution energized — busway, breakers, RPP, whips, metering
+    type: PHY
+    owners:
+      - ELEC
+  - id: M4.3
+    milestone: M4
+    name: Cooling loop commissioning — flush, treat, filter, pressure test, flow & delta-T
+    type: PHY
+    owners:
+      - MECH
+      - CX
+  - id: M4.4
+    milestone: M4
+    name: Leak detection functional test — rack and row level
+    type: HYB
+    owners:
+      - MECH
+      - CX
+  - id: M4.5
+    milestone: M4
+    name: Fire detection & suppression commissioned; AHJ inspection passed
+    type: PHY
+    owners:
+      - GC
+      - AHJ
+  - id: M4.6
+    milestone: M4
+    name: Cleanliness protocol in force; physical security & access control live
+    type: PHY
+    owners:
+      - OPS
+      - SEC
+  - id: M4.7
+    milestone: M4
+    name: Handover acceptance walk against written criteria
+    type: DOC
+    owners:
+      - CX
+      - PM
+  - id: M5.1
+    milestone: M5
+    name: Network rack placement, anchoring, power termination
+    type: PHY
+    owners:
+      - ICT
+      - ELEC
+  - id: M5.2
+    milestone: M5
+    name: Storage rack placement and power
+    type: PHY
+    owners:
+      - ICT
+      - ELEC
+  - id: M5.3
+    milestone: M5
+    name: Switch install — spine, leaf, management
+    type: PHY
+    owners:
+      - NET-F
+  - id: M5.4
+    milestone: M5
+    name: Management / OOB network live inside the hall
+    type: HYB
+    owners:
+      - NET-F
+      - NET-R
+  - id: M5.5
+    milestone: M5
+    name: Spine–leaf cabling per patching matrix
+    type: PHY
+    owners:
+      - ICT
+  - id: M5.6
+    milestone: M5
+    name: Fabric control plane baseline — SM or BGP/EVPN, firmware pinned
+    type: DIG
+    owners:
+      - NET-R
+  - id: M6.1
+    milestone: M6
+    name: Delivery scheduling against laydown capacity
+    type: DOC
+    owners:
+      - LOG
+  - id: M6.2
+    milestone: M6
+    name: Receiving, identification, damage inspection, DOA claim window
+    type: PHY
+    owners:
+      - LOG
+  - id: M6.3
+    milestone: M6
+    name: Rigging & placement — path of travel, level, anchor
+    type: PHY
+    owners:
+      - VEN
+      - GC
+  - id: M6.4
+    milestone: M6
+    name: Asset capture — serial → rack → slot
+    type: HYB
+    owners:
+      - OPS
+  - id: M6.5
+    milestone: M6
+    name: Power termination — busway tap, whip, dual A/B, phase balance
+    type: PHY
+    owners:
+      - ELEC
+  - id: M6.6
+    milestone: M6
+    name: Fluid connection — manifold, QDs, leak check, flow verification
+    type: PHY
+    owners:
+      - MECH
+  - id: M6.7
+    milestone: M6
+    name: Scale-out cabling to HDA per patching matrix
+    type: PHY
+    owners:
+      - ICT
+  - id: M6.8
+    milestone: M6
+    name: 100% link certification; as-built the patching matrix
+    type: DIG
+    owners:
+      - ICT
+  - id: M7.1
+    milestone: M7
+    name: Sequential energization — inrush managed, thermals confirmed at idle
+    type: HYB
+    owners:
+      - OPS
+      - ELEC
+  - id: M7.2
+    milestone: M7
+    name: BMC reachability and console access verified
+    type: DIG
+    owners:
+      - NET-R
+  - id: M7.3
+    milestone: M7
+    name: Firmware baseline — BIOS, BMC, NIC, NVLink switch, fabric OS
+    type: DIG
+    owners:
+      - NET-R
+  - id: M7.4
+    milestone: M7
+    name: Discovery & inventory reconciliation — serial ↔ MAC ↔ slot ↔ matrix
+    type: DIG
+    owners:
+      - NET-R
+  - id: M7.5
+    milestone: M7
+    name: Fabric bring-up; topology verified against intended design
+    type: DIG
+    owners:
+      - NET-R
+  - id: M7.6
+    milestone: M7
+    name: NVLink domain verification in-rack — all 72 GPUs, partition state
+    type: DIG
+    owners:
+      - NET-R
+  - id: M7.7
+    milestone: M7
+    name: OS / image provisioning, driver and CUDA/NCCL/DOCA stack pinned
+    type: DIG
+    owners:
+      - NET-R
+  - id: M7.8
+    milestone: M7
+    name: Scheduler and storage integration
+    type: DIG
+    owners:
+      - NET-R
+  - id: M7.9
+    milestone: M7
+    name: Telemetry and monitoring onboarded before validation
+    type: DIG
+    owners:
+      - OPS
+  - id: M8.1
+    milestone: M8
+    name: Node validation — DCGM levels, HBM/ECC, thermal soak, power envelope
+    type: DIG
+    owners:
+      - NET-R
+  - id: M8.2
+    milestone: M8
+    name: Fabric validation — error counters, optical power, retransmits, congestion
+    type: DIG
+    owners:
+      - NET-R
+  - id: M8.3
+    milestone: M8
+    name: Cluster NCCL validation — all_reduce/all_gather, rack → pod → hall
+    type: DIG
+    owners:
+      - NET-R
+  - id: M8.4
+    milestone: M8
+    name: Sustained soak across full footprint, defined window
+    type: DIG
+    owners:
+      - NET-R
+  - id: M8.5
+    milestone: M8
+    name: Break/fix & RMA loop — concurrent with M8.1–M8.4
+    type: HYB
+    owners:
+      - OPS
+      - NET-R
+  - id: M8.6
+    milestone: M8
+    name: Acceptance measured against the definition of done
+    type: DOC
+    owners:
+      - CUST
+      - PM
+  - id: M8.7
+    milestone: M8
+    name: Documentation package — as-builts, test results, assets, firmware manifest
+    type: DOC
+    owners:
+      - PM
+  - id: M8.8
+    milestone: M8
+    name: Ops turnover & customer access enabled
+    type: HYB
+    owners:
+      - OPS
+      - CUST
+tasks:
+  - id: M1.1.1
+    package: M1.1
+    name: Rack elevation drawings issued
+    type: DOC
+    owners:
+      - PM
+    predecessors: []
+    duration:
+      min: 3
+      max: 3
+  - id: M1.1.2
+    package: M1.1
+    name: Floor plan with rack coordinates, aisle containment
+    type: DOC
+    owners:
+      - PM
+    predecessors:
+      - M1.1.1
+    duration:
+      min: 3
+      max: 3
+  - id: M1.1.3
+    package: M1.1
+    name: Power layout — busway runs, RPP placement, whip schedule
+    type: DOC
+    owners:
+      - ELEC
+    predecessors:
+      - M1.1.2
+    duration:
+      min: 4
+      max: 4
+  - id: M1.1.4
+    package: M1.1
+    name: Fluid layout — CDU placement, manifold runs, QD schedule
+    type: DOC
+    owners:
+      - MECH
+    predecessors:
+      - M1.1.2
+    duration:
+      min: 4
+      max: 4
+  - id: M1.1.5
+    package: M1.1
+    name: Overhead coordination model — tray vs. mech vs. elec
+    type: DOC
+    owners:
+      - GC
+    predecessors:
+      - M1.1.3
+      - M1.1.4
+    duration:
+      min: 5
+      max: 5
+  - id: M1.2.1
+    package: M1.2
+    name: Fabric topology design — rail assignment, oversubscription
+    type: DOC
+    owners:
+      - NET-R
+    predecessors:
+      - M1.1.2
+    duration:
+      min: 5
+      max: 5
+  - id: M1.2.2
+    package: M1.2
+    name: Patching matrix generated — src/dst, media, length, polarity, label
+    type: DOC
+    owners:
+      - NET-R
+    predecessors:
+      - M1.2.1
+    duration:
+      min: 5
+      max: 5
+  - id: M1.2.3
+    package: M1.2
+    name: Matrix design review — rail alignment, length feasibility, breakout, pathway fill
+    type: DOC
+    owners:
+      - NET-R
+    predecessors:
+      - M1.2.2
+    duration:
+      min: 2
+      max: 2
+    gate: true
+    criterion: Patching matrix reviewed as a design artifact — rail alignment, length feasibility, polarity, breakout, pathway fill
+    evidence: Signed review record
+  - id: M1.2.4
+    package: M1.2
+    name: ICT cutsheets issued from matrix
+    type: DOC
+    owners:
+      - NET-R
+    predecessors:
+      - M1.2.3
+    duration:
+      min: 2
+      max: 2
+  - id: M1.3.1
+    package: M1.3
+    name: BOM derived from matrix — cable, cassettes, panels, optics
+    type: DOC
+    owners:
+      - ICT
+    predecessors:
+      - M1.2.4
+    duration:
+      min: 3
+      max: 3
+  - id: M1.3.2
+    package: M1.3
+    name: OFCI/CFCI split decided; delay-risk allocation written
+    type: DOC
+    owners:
+      - PM
+    predecessors:
+      - M1.3.1
+    duration:
+      min: 2
+      max: 2
+  - id: M1.4.1
+    package: M1.4
+    name: Optics & trunk PO released
+    type: DOC
+    owners:
+      - PM
+    predecessors:
+      - M1.3.2
+    duration:
+      min: 1
+      max: 1
+  - id: M1.4.2
+    package: M1.4
+    name: Switch & cabinet PO released
+    type: DOC
+    owners:
+      - PM
+    predecessors:
+      - M1.3.2
+    duration:
+      min: 1
+      max: 1
+  - id: M1.4.3
+    package: M1.4
+    name: Long-lead tracker established with vendor milestone dates
+    type: DOC
+    owners:
+      - PM
+    predecessors:
+      - M1.4.1
+      - M1.4.2
+    duration:
+      min: 2
+      max: 2
+  - id: M1.5.1
+    package: M1.5
+    name: ICT scope of work drafted from BOM
+    type: DOC
+    owners:
+      - PM
+    predecessors:
+      - M1.3.1
+    duration:
+      min: 3
+      max: 3
+  - id: M1.5.2
+    package: M1.5
+    name: Prequalification — BICSI certs, manufacturer cert, DC references
+    type: DOC
+    owners:
+      - PM
+    predecessors:
+      - M1.5.1
+    duration:
+      min: 5
+      max: 5
+  - id: M1.5.3
+    package: M1.5
+    name: Contract executed with retention-through-validation term
+    type: DOC
+    owners:
+      - PM
+    predecessors:
+      - M1.5.2
+    duration:
+      min: 5
+      max: 5
+    gate: true
+    criterion: ICT contract executed with retention-through-validation
+    evidence: Executed contract
+  - id: M1.6.1
+    package: M1.6
+    name: Draft definition of done in measurable terms
+    type: DOC
+    owners:
+      - PM
+    predecessors: []
+    duration:
+      min: 2
+      max: 2
+  - id: M1.6.2
+    package: M1.6
+    name: Vocabulary alignment session — construction, deployment, network, ops, account
+    type: DOC
+    owners:
+      - PM
+    predecessors:
+      - M1.6.1
+    duration:
+      min: 1
+      max: 1
+  - id: M1.6.3
+    package: M1.6
+    name: Definition of done signed by all five parties
+    type: DOC
+    owners:
+      - CUST
+    predecessors:
+      - M1.6.2
+    duration:
+      min: 3
+      max: 3
+    gate: true
+    criterion: Definition of done signed by all five parties
+    evidence: Signed document
+  - id: M2.1.1
+    package: M2.1
+    name: Entrance facility siting — A and B, physically separated
+    type: DOC
+    owners:
+      - NET-R
+    predecessors:
+      - M1.1.2
+    duration:
+      min: 3
+      max: 3
+  - id: M2.1.2
+    package: M2.1
+    name: Conduit path design, route survey
+    type: DOC
+    owners:
+      - GC
+    predecessors:
+      - M2.1.1
+    duration:
+      min: 5
+      max: 5
+  - id: M2.1.3
+    package: M2.1
+    name: Permitting — ROW, road crossing, environmental
+    type: DOC
+    owners:
+      - GC
+    predecessors:
+      - M2.1.2
+    duration:
+      min: 20
+      max: 90
+    external: true
+  - id: M2.1.4
+    package: M2.1
+    name: Entrance conduit construction, both paths
+    type: PHY
+    owners:
+      - GC
+    predecessors:
+      - M2.1.3
+    duration:
+      min: 15
+      max: 15
+  - id: M2.1.5
+    package: M2.1
+    name: Entrance room build — grounding, fire-stop, racks
+    type: PHY
+    owners:
+      - GC
+    predecessors:
+      - M2.1.4
+    duration:
+      min: 10
+      max: 10
+  - id: M2.2.1
+    package: M2.2
+    name: OSP route engineering to carrier POP / meet point
+    type: DOC
+    owners:
+      - ICT
+    predecessors:
+      - M2.1.2
+    duration:
+      min: 10
+      max: 10
+  - id: M2.2.2
+    package: M2.2
+    name: Trenching / boring / aerial per route
+    type: PHY
+    owners:
+      - ICT
+    predecessors:
+      - M2.1.3
+    duration:
+      min: 20
+      max: 60
+  - id: M2.2.3
+    package: M2.2
+    name: Cable placement, both diverse paths
+    type: PHY
+    owners:
+      - ICT
+    predecessors:
+      - M2.2.2
+    duration:
+      min: 10
+      max: 10
+  - id: M2.2.4
+    package: M2.2
+    name: Splicing — field splices, splice enclosures
+    type: PHY
+    owners:
+      - ICT
+    predecessors:
+      - M2.2.3
+    duration:
+      min: 7
+      max: 7
+  - id: M2.2.5
+    package: M2.2
+    name: OTDR testing end-to-end, both paths
+    type: DIG
+    owners:
+      - ICT
+    predecessors:
+      - M2.2.4
+    duration:
+      min: 3
+      max: 3
+  - id: M2.2.6
+    package: M2.2
+    name: Physical diversity verification — field walk, not paperwork
+    type: PHY
+    owners:
+      - NET-R
+    predecessors:
+      - M2.2.5
+    duration:
+      min: 2
+      max: 2
+    gate: true
+    criterion: Physical path diversity verified by field walk
+    evidence: Route survey + photos
+  - id: M2.3.1
+    package: M2.3
+    name: Carrier selection & pricing
+    type: DOC
+    owners:
+      - NET-R
+    predecessors:
+      - M2.1.1
+    duration:
+      min: 10
+      max: 10
+  - id: M2.3.2
+    package: M2.3
+    name: Circuit orders placed; LOA/CFA issued
+    type: DOC
+    owners:
+      - NET-R
+    predecessors:
+      - M2.3.1
+    duration:
+      min: 3
+      max: 3
+  - id: M2.3.3
+    package: M2.3
+    name: Carrier provisioning tracked weekly against their milestones
+    type: DOC
+    owners:
+      - NET-R
+    predecessors:
+      - M2.3.2
+    duration:
+      min: 30
+      max: 120
+    external: true
+  - id: M2.4.1
+    package: M2.4
+    name: MMR rack & cabinet install
+    type: PHY
+    owners:
+      - ICT
+    predecessors:
+      - M2.1.5
+    duration:
+      min: 5
+      max: 5
+  - id: M2.4.2
+    package: M2.4
+    name: Splice enclosures & patch fields terminated
+    type: PHY
+    owners:
+      - ICT
+    predecessors:
+      - M2.4.1
+      - M2.2.4
+    duration:
+      min: 5
+      max: 5
+  - id: M2.4.3
+    package: M2.4
+    name: Demarcation rack build — carrier side / Fluidstack side
+    type: PHY
+    owners:
+      - ICT
+    predecessors:
+      - M2.4.2
+    duration:
+      min: 3
+      max: 3
+  - id: M2.4.4
+    package: M2.4
+    name: Grounding & bonding verified
+    type: PHY
+    owners:
+      - ICT
+    predecessors:
+      - M2.4.3
+    duration:
+      min: 2
+      max: 2
+  - id: M2.5.1
+    package: M2.5
+    name: Cross-connect requests submitted per circuit
+    type: DOC
+    owners:
+      - NET-R
+    predecessors:
+      - M2.3.3
+      - M2.4.3
+    duration:
+      min: 2
+      max: 2
+  - id: M2.5.2
+    package: M2.5
+    name: Cross-connects placed carrier demarc → DC demarc rack
+    type: PHY
+    owners:
+      - ICT
+    predecessors:
+      - M2.5.1
+    duration:
+      min: 5
+      max: 5
+  - id: M2.5.3
+    package: M2.5
+    name: Light levels verified at demarc, each circuit
+    type: HYB
+    owners:
+      - ICT
+      - NET-R
+    predecessors:
+      - M2.5.2
+    duration:
+      min: 2
+      max: 2
+  - id: M2.6.1
+    package: M2.6
+    name: Border router install & rack
+    type: PHY
+    owners:
+      - NET-F
+    predecessors:
+      - M2.4.1
+    duration:
+      min: 3
+      max: 3
+  - id: M2.6.2
+    package: M2.6
+    name: DWDM transponder / muxponder install
+    type: PHY
+    owners:
+      - NET-F
+    predecessors:
+      - M2.6.1
+    duration:
+      min: 3
+      max: 3
+  - id: M2.6.3
+    package: M2.6
+    name: Edge config — routing, BGP sessions, ACLs
+    type: DIG
+    owners:
+      - NET-R
+    predecessors:
+      - M2.6.2
+      - M2.5.3
+    duration:
+      min: 5
+      max: 5
+  - id: M2.6.4
+    package: M2.6
+    name: DCI turn-up to peer sites
+    type: DIG
+    owners:
+      - NET-R
+    predecessors:
+      - M2.6.3
+    duration:
+      min: 3
+      max: 3
+  - id: M2.7.1
+    package: M2.7
+    name: OOB carrier selection — different carrier, different path
+    type: DOC
+    owners:
+      - NET-R
+    predecessors:
+      - M2.3.1
+    duration:
+      min: 5
+      max: 5
+  - id: M2.7.2
+    package: M2.7
+    name: OOB circuit provisioned
+    type: DOC
+    owners:
+      - NET-R
+    predecessors:
+      - M2.7.1
+    duration:
+      min: 30
+      max: 90
+    external: true
+  - id: M2.7.3
+    package: M2.7
+    name: OOB terminal server / console infrastructure install
+    type: PHY
+    owners:
+      - NET-F
+    predecessors:
+      - M2.7.2
+    duration:
+      min: 3
+      max: 3
+  - id: M2.7.4
+    package: M2.7
+    name: OOB reachability proven with primary path down
+    type: DIG
+    owners:
+      - NET-R
+    predecessors:
+      - M2.7.3
+    duration:
+      min: 1
+      max: 1
+    gate: true
+    criterion: OOB reachable with primary path down
+    evidence: Test record
+  - id: M2.8.1
+    package: M2.8
+    name: Throughput test, each path independently
+    type: DIG
+    owners:
+      - NET-R
+    predecessors:
+      - M2.6.4
+    duration:
+      min: 2
+      max: 2
+  - id: M2.8.2
+    package: M2.8
+    name: Latency & jitter baseline captured
+    type: DIG
+    owners:
+      - NET-R
+    predecessors:
+      - M2.8.1
+    duration:
+      min: 1
+      max: 1
+  - id: M2.8.3
+    package: M2.8
+    name: A/B failover tested under load
+    type: DIG
+    owners:
+      - NET-R
+    predecessors:
+      - M2.8.2
+    duration:
+      min: 1
+      max: 1
+    gate: true
+    criterion: A/B failover tested under load
+    evidence: Test record
+  - id: M2.8.4
+    package: M2.8
+    name: WAN acceptance signed
+    type: DOC
+    owners:
+      - NET-R
+    predecessors:
+      - M2.8.3
+      - M2.7.4
+    duration:
+      min: 1
+      max: 1
+    gate: true
+    criterion: WAN acceptance signed
+    evidence: Signed acceptance
+  - id: M3.1.1
+    package: M3.1
+    name: Overhead coordination walk — tray vs. mech vs. elec, resolved on site
+    type: PHY
+    owners:
+      - GC
+    predecessors:
+      - M1.1.5
+      - M4.1.2
+    duration:
+      min: 2
+      max: 2
+    gate: true
+    criterion: Overhead coordination resolved on site, three trades present
+    evidence: Coordination walk record
+  - id: M3.1.2
+    package: M3.1
+    name: Tray & ladder rack install, main runs
+    type: PHY
+    owners:
+      - ICT
+    predecessors:
+      - M3.1.1
+    duration:
+      min: 8
+      max: 8
+  - id: M3.1.3
+    package: M3.1
+    name: Basket / branch pathway to row positions
+    type: PHY
+    owners:
+      - ICT
+    predecessors:
+      - M3.1.2
+    duration:
+      min: 5
+      max: 5
+  - id: M3.1.4
+    package: M3.1
+    name: Pathway fill check against BOM trunk count
+    type: DOC
+    owners:
+      - ICT
+    predecessors:
+      - M3.1.3
+    duration:
+      min: 1
+      max: 1
+  - id: M3.2.1
+    package: M3.2
+    name: MDA cabinet install & anchoring
+    type: PHY
+    owners:
+      - ICT
+    predecessors:
+      - M4.1.2
+    duration:
+      min: 3
+      max: 3
+  - id: M3.2.2
+    package: M3.2
+    name: MDA patch fields & cassettes populated
+    type: PHY
+    owners:
+      - ICT
+    predecessors:
+      - M3.2.1
+    duration:
+      min: 4
+      max: 4
+  - id: M3.2.3
+    package: M3.2
+    name: MDA grounding & bonding
+    type: PHY
+    owners:
+      - ICT
+    predecessors:
+      - M3.2.2
+    duration:
+      min: 1
+      max: 1
+  - id: M3.3.1
+    package: M3.3
+    name: HDA cabinet install per row
+    type: PHY
+    owners:
+      - ICT
+    predecessors:
+      - M4.1.2
+    duration:
+      min: 5
+      max: 5
+  - id: M3.3.2
+    package: M3.3
+    name: HDA patch fields & cassettes populated
+    type: PHY
+    owners:
+      - ICT
+    predecessors:
+      - M3.3.1
+    duration:
+      min: 5
+      max: 5
+  - id: M3.4.1
+    package: M3.4
+    name: Backbone trunk pull MDA → HDA
+    type: PHY
+    owners:
+      - ICT
+    predecessors:
+      - M3.1.3
+      - M3.2.2
+      - M3.3.2
+    duration:
+      min: 8
+      max: 8
+  - id: M3.4.2
+    package: M3.4
+    name: Trunk termination & dressing
+    type: PHY
+    owners:
+      - ICT
+    predecessors:
+      - M3.4.1
+    duration:
+      min: 5
+      max: 5
+  - id: M3.5.1
+    package: M3.5
+    name: Label print & apply per ANSI/TIA-606
+    type: DOC
+    owners:
+      - ICT
+    predecessors:
+      - M3.4.2
+    duration:
+      min: 3
+      max: 3
+  - id: M3.5.2
+    package: M3.5
+    name: Label scheme reconciled to monitoring schema
+    type: DOC
+    owners:
+      - NET-R
+    predecessors:
+      - M3.5.1
+    duration:
+      min: 1
+      max: 1
+    gate: true
+    criterion: Label scheme reconciled to monitoring schema
+    evidence: Schema diff
+  - id: M3.6.1
+    package: M3.6
+    name: Tier 1 insertion loss test, 100% of links
+    type: DIG
+    owners:
+      - ICT
+    predecessors:
+      - M3.5.1
+    duration:
+      min: 4
+      max: 4
+  - id: M3.6.2
+    package: M3.6
+    name: Tier 2 OTDR test, 100% of links
+    type: DIG
+    owners:
+      - ICT
+    predecessors:
+      - M3.6.1
+    duration:
+      min: 4
+      max: 4
+  - id: M3.6.3
+    package: M3.6
+    name: Remediation of failed links
+    type: PHY
+    owners:
+      - ICT
+    predecessors:
+      - M3.6.2
+    duration:
+      min: 3
+      max: 3
+  - id: M3.6.4
+    package: M3.6
+    name: Certification package delivered — payment milestone
+    type: DOC
+    owners:
+      - ICT
+    predecessors:
+      - M3.6.3
+    duration:
+      min: 2
+      max: 2
+    gate: true
+    criterion: 100% Tier 1 + Tier 2 certification delivered
+    evidence: Certification package
+  - id: M3.6.5
+    package: M3.6
+    name: As-built reconciled to patching matrix
+    type: DOC
+    owners:
+      - ICT
+    predecessors:
+      - M3.6.4
+    duration:
+      min: 2
+      max: 2
+  - id: M4.1.1
+    package: M4.1
+    name: Building envelope weathertight
+    type: PHY
+    owners:
+      - GC
+    predecessors: []
+    external: true
+  - id: M4.1.2
+    package: M4.1
+    name: Hall sealed; construction dust protocol in force
+    type: PHY
+    owners:
+      - GC
+    predecessors:
+      - M4.1.1
+    duration:
+      min: 3
+      max: 3
+    gate: true
+    criterion: Hall sealed, dust protocol in force
+    evidence: Inspection record
+  - id: M4.1.3
+    package: M4.1
+    name: Hot/cold aisle containment installed
+    type: PHY
+    owners:
+      - GC
+    predecessors:
+      - M4.1.2
+    duration:
+      min: 5
+      max: 5
+  - id: M4.1.4
+    package: M4.1
+    name: Temp & humidity control stable, logged 72h
+    type: DIG
+    owners:
+      - MECH
+    predecessors:
+      - M4.1.3
+    duration:
+      min: 3
+      max: 3
+  - id: M4.2.1
+    package: M4.2
+    name: Busway install & energization
+    type: PHY
+    owners:
+      - ELEC
+    predecessors:
+      - M4.1.2
+    duration:
+      min: 10
+      max: 10
+  - id: M4.2.2
+    package: M4.2
+    name: RPP / panel install, breaker schedule set
+    type: PHY
+    owners:
+      - ELEC
+    predecessors:
+      - M4.2.1
+    duration:
+      min: 5
+      max: 5
+  - id: M4.2.3
+    package: M4.2
+    name: Whip drops to rack positions
+    type: PHY
+    owners:
+      - ELEC
+    predecessors:
+      - M4.2.2
+    duration:
+      min: 8
+      max: 8
+  - id: M4.2.4
+    package: M4.2
+    name: Metering onboarded to BMS/DCIM
+    type: DIG
+    owners:
+      - ELEC
+    predecessors:
+      - M4.2.3
+    duration:
+      min: 3
+      max: 3
+  - id: M4.2.5
+    package: M4.2
+    name: Phase balance plan verified against rack layout
+    type: DOC
+    owners:
+      - ELEC
+    predecessors:
+      - M4.2.4
+    duration:
+      min: 1
+      max: 1
+  - id: M4.3.1
+    package: M4.3
+    name: CDU set, piped, and powered
+    type: PHY
+    owners:
+      - MECH
+    predecessors:
+      - M4.1.2
+    duration:
+      min: 8
+      max: 8
+  - id: M4.3.2
+    package: M4.3
+    name: Secondary loop piping complete to manifold positions
+    type: PHY
+    owners:
+      - MECH
+    predecessors:
+      - M4.3.1
+    duration:
+      min: 10
+      max: 10
+  - id: M4.3.3
+    package: M4.3
+    name: Loop flush — particulate to spec
+    type: PHY
+    owners:
+      - MECH
+    predecessors:
+      - M4.3.2
+    duration:
+      min: 3
+      max: 3
+    gate: true
+    criterion: Loop flush — particulate to spec
+    evidence: Fluid sample analysis
+  - id: M4.3.4
+    package: M4.3
+    name: Chemical treatment & fluid chemistry verification
+    type: PHY
+    owners:
+      - MECH
+    predecessors:
+      - M4.3.3
+    duration:
+      min: 2
+      max: 2
+    gate: true
+    criterion: Chemical treatment & chemistry verified
+    evidence: Chemistry report
+  - id: M4.3.5
+    package: M4.3
+    name: Filtration commissioned, differential pressure baselined
+    type: PHY
+    owners:
+      - MECH
+    predecessors:
+      - M4.3.4
+    duration:
+      min: 1
+      max: 1
+  - id: M4.3.6
+    package: M4.3
+    name: Pressure test held per spec duration
+    type: PHY
+    owners:
+      - CX
+    predecessors:
+      - M4.3.5
+    duration:
+      min: 2
+      max: 2
+    gate: true
+    criterion: Pressure test held for spec duration
+    evidence: Pressure log
+  - id: M4.3.7
+    package: M4.3
+    name: Flow rate & delta-T verified under simulated load
+    type: HYB
+    owners:
+      - CX
+    predecessors:
+      - M4.3.6
+    duration:
+      min: 3
+      max: 3
+    gate: true
+    criterion: Flow rate & delta-T verified under simulated load
+    evidence: Commissioning record
+  - id: M4.4.1
+    package: M4.4
+    name: Leak detection cable/sensors installed rack & row
+    type: PHY
+    owners:
+      - MECH
+    predecessors:
+      - M4.3.2
+    duration:
+      min: 4
+      max: 4
+  - id: M4.4.2
+    package: M4.4
+    name: Leak detection functionally triggered, alarm path proven to BMS
+    type: HYB
+    owners:
+      - CX
+    predecessors:
+      - M4.4.1
+      - M4.3.7
+    duration:
+      min: 2
+      max: 2
+    gate: true
+    criterion: Leak detection functionally triggered, alarm proven to BMS
+    evidence: Trigger test record
+  - id: M4.5.1
+    package: M4.5
+    name: Detection & suppression install complete
+    type: PHY
+    owners:
+      - GC
+    predecessors: []
+    external: true
+  - id: M4.5.2
+    package: M4.5
+    name: VESDA commissioned & sampled
+    type: PHY
+    owners:
+      - CX
+    predecessors:
+      - M4.5.1
+    duration:
+      min: 3
+      max: 3
+  - id: M4.5.3
+    package: M4.5
+    name: AHJ inspection passed
+    type: DOC
+    owners:
+      - AHJ
+    predecessors:
+      - M4.5.2
+      - M4.1.3
+    duration:
+      min: 2
+      max: 2
+    gate: true
+    criterion: AHJ inspection passed
+    evidence: AHJ sign-off
+    external: true
+  - id: M4.6.1
+    package: M4.6
+    name: Cleanliness verification to ISO class
+    type: PHY
+    owners:
+      - OPS
+    predecessors:
+      - M4.1.4
+    duration:
+      min: 2
+      max: 2
+  - id: M4.6.2
+    package: M4.6
+    name: Access control live; badge groups defined
+    type: HYB
+    owners:
+      - SEC
+    predecessors:
+      - M4.1.2
+    duration:
+      min: 3
+      max: 3
+  - id: M4.6.3
+    package: M4.6
+    name: Laydown & storage areas designated and published
+    type: DOC
+    owners:
+      - LOG
+    predecessors:
+      - M4.6.2
+    duration:
+      min: 1
+      max: 1
+  - id: M4.7.1
+    package: M4.7
+    name: Punch walk against written handover criteria
+    type: DOC
+    owners:
+      - CX
+      - PM
+    predecessors:
+      - M4.2.5
+      - M4.4.2
+      - M4.5.3
+      - M4.6.1
+    duration:
+      min: 2
+      max: 2
+  - id: M4.7.2
+    package: M4.7
+    name: Punch remediation
+    type: PHY
+    owners:
+      - GC
+    predecessors:
+      - M4.7.1
+    duration:
+      min: 5
+      max: 5
+  - id: M4.7.3
+    package: M4.7
+    name: Handover accepted — signed by construction and deployment
+    type: DOC
+    owners:
+      - CX
+      - PM
+    predecessors:
+      - M4.7.2
+    duration:
+      min: 1
+      max: 1
+    gate: true
+    criterion: Handover accepted — signed by construction and deployment
+    evidence: Dual-signed acceptance
+  - id: M5.1.1
+    package: M5.1
+    name: Network cabinet delivery & staging
+    type: PHY
+    owners:
+      - LOG
+    predecessors:
+      - M4.7.3
+    duration:
+      min: 2
+      max: 2
+  - id: M5.1.2
+    package: M5.1
+    name: Placement, level, anchor
+    type: PHY
+    owners:
+      - ICT
+    predecessors:
+      - M5.1.1
+    duration:
+      min: 3
+      max: 3
+  - id: M5.1.3
+    package: M5.1
+    name: Power termination, dual A/B
+    type: PHY
+    owners:
+      - ELEC
+    predecessors:
+      - M5.1.2
+    duration:
+      min: 2
+      max: 2
+  - id: M5.1.4
+    package: M5.1
+    name: Grounding & bonding
+    type: PHY
+    owners:
+      - ICT
+    predecessors:
+      - M5.1.3
+    duration:
+      min: 1
+      max: 1
+  - id: M5.2.1
+    package: M5.2
+    name: Storage rack delivery, placement, anchor
+    type: PHY
+    owners:
+      - ICT
+    predecessors:
+      - M4.7.3
+    duration:
+      min: 3
+      max: 3
+  - id: M5.2.2
+    package: M5.2
+    name: Storage power & fluid (if liquid-cooled) termination
+    type: PHY
+    owners:
+      - ELEC
+      - MECH
+    predecessors:
+      - M5.2.1
+    duration:
+      min: 2
+      max: 2
+  - id: M5.3.1
+    package: M5.3
+    name: Spine switch install & mount
+    type: PHY
+    owners:
+      - NET-F
+    predecessors:
+      - M5.1.4
+    duration:
+      min: 3
+      max: 3
+  - id: M5.3.2
+    package: M5.3
+    name: Leaf switch install & mount
+    type: PHY
+    owners:
+      - NET-F
+    predecessors:
+      - M5.1.4
+    duration:
+      min: 4
+      max: 4
+  - id: M5.3.3
+    package: M5.3
+    name: Management switch install
+    type: PHY
+    owners:
+      - NET-F
+    predecessors:
+      - M5.1.4
+    duration:
+      min: 2
+      max: 2
+  - id: M5.3.4
+    package: M5.3
+    name: Switch firmware baselined to known-good matrix
+    type: DIG
+    owners:
+      - NET-R
+    predecessors:
+      - M5.3.1
+      - M5.3.2
+      - M5.3.3
+    duration:
+      min: 2
+      max: 2
+    gate: true
+    criterion: Switch firmware baselined to known-good matrix
+    evidence: Version manifest
+  - id: M5.4.1
+    package: M5.4
+    name: OOB cabling to console/terminal servers
+    type: PHY
+    owners:
+      - ICT
+    predecessors:
+      - M5.3.3
+    duration:
+      min: 3
+      max: 3
+  - id: M5.4.2
+    package: M5.4
+    name: Management network addressing & config
+    type: DIG
+    owners:
+      - NET-R
+    predecessors:
+      - M5.4.1
+    duration:
+      min: 2
+      max: 2
+  - id: M5.4.3
+    package: M5.4
+    name: OOB reachability proven from remote, production path down
+    type: DIG
+    owners:
+      - NET-R
+    predecessors:
+      - M5.4.2
+      - M2.7.4
+    duration:
+      min: 1
+      max: 1
+    gate: true
+    criterion: OOB proven from remote with production down
+    evidence: Test record
+  - id: M5.5.1
+    package: M5.5
+    name: Spine–leaf trunk install per patching matrix
+    type: PHY
+    owners:
+      - ICT
+    predecessors:
+      - M5.3.4
+      - M3.6.4
+    duration:
+      min: 5
+      max: 5
+  - id: M5.5.2
+    package: M5.5
+    name: Optics seated; light levels verified both ends
+    type: HYB
+    owners:
+      - ICT
+      - NET-R
+    predecessors:
+      - M5.5.1
+    duration:
+      min: 3
+      max: 3
+  - id: M5.5.3
+    package: M5.5
+    name: 100% spine–leaf link certification
+    type: DIG
+    owners:
+      - ICT
+    predecessors:
+      - M5.5.2
+    duration:
+      min: 2
+      max: 2
+  - id: M5.6.1
+    package: M5.6
+    name: Subnet manager (IB) or BGP/EVPN (Eth) control plane config
+    type: DIG
+    owners:
+      - NET-R
+    predecessors:
+      - M5.5.3
+    duration:
+      min: 3
+      max: 3
+  - id: M5.6.2
+    package: M5.6
+    name: Topology discovered and verified against intended design
+    type: DIG
+    owners:
+      - NET-R
+    predecessors:
+      - M5.6.1
+    duration:
+      min: 2
+      max: 2
+    gate: true
+    criterion: Topology verified against intended design
+    evidence: Design diff
+  - id: M5.6.3
+    package: M5.6
+    name: Link error counters baselined
+    type: DIG
+    owners:
+      - NET-R
+    predecessors:
+      - M5.6.2
+    duration:
+      min: 1
+      max: 1
+  - id: M5.6.4
+    package: M5.6
+    name: Leaf ports for compute pre-configured & verified up
+    type: DIG
+    owners:
+      - NET-R
+    predecessors:
+      - M5.6.3
+    duration:
+      min: 2
+      max: 2
+  - id: M6.1.1
+    package: M6.1
+    name: Delivery schedule built against laydown capacity & crew throughput
+    type: DOC
+    owners:
+      - LOG
+    predecessors:
+      - M4.6.3
+    duration:
+      min: 2
+      max: 2
+  - id: M6.1.2
+    package: M6.1
+    name: Carrier/freight booking, delivery windows confirmed
+    type: DOC
+    owners:
+      - LOG
+    predecessors:
+      - M6.1.1
+    duration:
+      min: 3
+      max: 3
+  - id: M6.1.3
+    package: M6.1
+    name: Receiving protocol published — notification, identification, routing
+    type: DOC
+    owners:
+      - LOG
+    predecessors:
+      - M6.1.1
+    duration:
+      min: 1
+      max: 1
+    gate: true
+    criterion: Receiving protocol published
+    evidence: Published procedure
+  - id: M6.2.1
+    package: M6.2
+    name: Delivery notification to site 24h ahead
+    type: DOC
+    owners:
+      - LOG
+    predecessors:
+      - M6.1.3
+  - id: M6.2.2
+    package: M6.2
+    name: Receive, verify against manifest, photograph
+    type: PHY
+    owners:
+      - LOG
+    predecessors:
+      - M6.2.1
+    duration:
+      min: 6
+      max: 6
+  - id: M6.2.3
+    package: M6.2
+    name: Damage inspection; DOA claim window preserved
+    type: PHY
+    owners:
+      - LOG
+    predecessors:
+      - M6.2.2
+  - id: M6.2.4
+    package: M6.2
+    name: Stage to laydown in installation sequence
+    type: PHY
+    owners:
+      - LOG
+    predecessors:
+      - M6.2.3
+  - id: M6.3.1
+    package: M6.3
+    name: Path-of-travel survey & floor protection
+    type: PHY
+    owners:
+      - GC
+    predecessors:
+      - M4.7.3
+    duration:
+      min: 2
+      max: 2
+  - id: M6.3.2
+    package: M6.3
+    name: De-crate & ramp
+    type: PHY
+    owners:
+      - VEN
+    predecessors:
+      - M6.2.4
+      - M6.3.1
+    duration:
+      min: 6
+      max: 6
+  - id: M6.3.3
+    package: M6.3
+    name: Position, level, anchor per seismic detail
+    type: PHY
+    owners:
+      - VEN
+    predecessors:
+      - M6.3.2
+    duration:
+      min: 6
+      max: 6
+  - id: M6.4.1
+    package: M6.4
+    name: Serial capture → rack → slot, at placement
+    type: HYB
+    owners:
+      - OPS
+    predecessors:
+      - M6.3.3
+    duration:
+      min: 4
+      max: 4
+    gate: true
+    criterion: Asset capture at placement — serial → rack → slot
+    evidence: Inventory export
+  - id: M6.4.2
+    package: M6.4
+    name: Asset records loaded to inventory system
+    type: DIG
+    owners:
+      - OPS
+    predecessors:
+      - M6.4.1
+    duration:
+      min: 2
+      max: 2
+  - id: M6.5.1
+    package: M6.5
+    name: Busway tap & whip land to rack PDU, A/B
+    type: PHY
+    owners:
+      - ELEC
+    predecessors:
+      - M6.3.3
+    duration:
+      min: 6
+      max: 6
+  - id: M6.5.2
+    package: M6.5
+    name: Torque verification & thermographic scan
+    type: PHY
+    owners:
+      - ELEC
+    predecessors:
+      - M6.5.1
+    duration:
+      min: 2
+      max: 2
+  - id: M6.5.3
+    package: M6.5
+    name: Phase balance verified across row
+    type: DIG
+    owners:
+      - ELEC
+    predecessors:
+      - M6.5.2
+    duration:
+      min: 1
+      max: 1
+  - id: M6.6.1
+    package: M6.6
+    name: Manifold connection & QD seating
+    type: PHY
+    owners:
+      - MECH
+    predecessors:
+      - M6.3.3
+    duration:
+      min: 6
+      max: 6
+  - id: M6.6.2
+    package: M6.6
+    name: Leak check per connection
+    type: PHY
+    owners:
+      - MECH
+    predecessors:
+      - M6.6.1
+    duration:
+      min: 3
+      max: 3
+    gate: true
+    criterion: Leak check per fluid connection
+    evidence: Per-rack record
+  - id: M6.6.3
+    package: M6.6
+    name: Flow & delta-T verified per rack
+    type: HYB
+    owners:
+      - MECH
+      - CX
+    predecessors:
+      - M6.6.2
+    duration:
+      min: 3
+      max: 3
+  - id: M6.7.1
+    package: M6.7
+    name: Scale-out cable pull rack → HDA
+    type: PHY
+    owners:
+      - ICT
+    predecessors:
+      - M6.3.3
+      - M5.5.3
+    duration:
+      min: 10
+      max: 10
+  - id: M6.7.2
+    package: M6.7
+    name: Termination & optic seating
+    type: PHY
+    owners:
+      - ICT
+    predecessors:
+      - M6.7.1
+    duration:
+      min: 6
+      max: 6
+  - id: M6.7.3
+    package: M6.7
+    name: Management / BMC copper, OOB drops
+    type: PHY
+    owners:
+      - ICT
+    predecessors:
+      - M6.7.1
+    duration:
+      min: 4
+      max: 4
+  - id: M6.7.4
+    package: M6.7
+    name: Storage fabric cabling
+    type: PHY
+    owners:
+      - ICT
+    predecessors:
+      - M6.7.1
+    duration:
+      min: 3
+      max: 3
+  - id: M6.7.5
+    package: M6.7
+    name: Labeling applied per matrix
+    type: DOC
+    owners:
+      - ICT
+    predecessors:
+      - M6.7.2
+    duration:
+      min: 3
+      max: 3
+  - id: M6.8.1
+    package: M6.8
+    name: 100% link certification — loss, OTDR, optical power
+    type: DIG
+    owners:
+      - ICT
+    predecessors:
+      - M6.7.5
+    duration:
+      min: 5
+      max: 5
+  - id: M6.8.2
+    package: M6.8
+    name: Remediation of failures
+    type: PHY
+    owners:
+      - ICT
+    predecessors:
+      - M6.8.1
+    duration:
+      min: 3
+      max: 3
+  - id: M6.8.3
+    package: M6.8
+    name: Patching matrix updated to as-built
+    type: DOC
+    owners:
+      - ICT
+    predecessors:
+      - M6.8.2
+    duration:
+      min: 3
+      max: 3
+    gate: true
+    criterion: Patching matrix updated to as-built
+    evidence: As-built matrix
+  - id: M6.8.4
+    package: M6.8
+    name: Certification package delivered
+    type: DOC
+    owners:
+      - ICT
+    predecessors:
+      - M6.8.3
+    duration:
+      min: 1
+      max: 1
+  - id: M7.1.1
+    package: M7.1
+    name: Energization sequence plan — inrush staged by row
+    type: DOC
+    owners:
+      - ELEC
+    predecessors:
+      - M6.5.3
+    duration:
+      min: 1
+      max: 1
+  - id: M7.1.2
+    package: M7.1
+    name: Sequential power-on per plan
+    type: HYB
+    owners:
+      - OPS
+      - ELEC
+    predecessors:
+      - M7.1.1
+      - M6.6.3
+    duration:
+      min: 3
+      max: 3
+  - id: M7.1.3
+    package: M7.1
+    name: Idle draw verified vs. design; thermals confirmed
+    type: HYB
+    owners:
+      - OPS
+      - MECH
+    predecessors:
+      - M7.1.2
+    duration:
+      min: 2
+      max: 2
+  - id: M7.2.1
+    package: M7.2
+    name: BMC addressing & DHCP scope live
+    type: DIG
+    owners:
+      - NET-R
+    predecessors:
+      - M5.4.3
+    duration:
+      min: 1
+      max: 1
+  - id: M7.2.2
+    package: M7.2
+    name: BMC reachability verified, all 64 racks
+    type: DIG
+    owners:
+      - NET-R
+    predecessors:
+      - M7.2.1
+      - M7.1.2
+    duration:
+      min: 2
+      max: 2
+  - id: M7.2.3
+    package: M7.2
+    name: Serial console access verified
+    type: DIG
+    owners:
+      - NET-R
+    predecessors:
+      - M7.2.2
+    duration:
+      min: 1
+      max: 1
+  - id: M7.3.1
+    package: M7.3
+    name: Known-good firmware matrix published & version-pinned
+    type: DOC
+    owners:
+      - NET-R
+    predecessors: []
+    duration:
+      min: 1
+      max: 1
+  - id: M7.3.2
+    package: M7.3
+    name: BIOS / BMC baseline applied fleet-wide
+    type: DIG
+    owners:
+      - NET-R
+    predecessors:
+      - M7.3.1
+      - M7.2.2
+    duration:
+      min: 2
+      max: 2
+    gate: true
+    criterion: Firmware baselined fleet-wide
+    evidence: Firmware manifest
+  - id: M7.3.3
+    package: M7.3
+    name: NIC & NVLink switch firmware baselined
+    type: DIG
+    owners:
+      - NET-R
+    predecessors:
+      - M7.3.2
+    duration:
+      min: 2
+      max: 2
+    gate: true
+    criterion: Firmware baselined fleet-wide
+    evidence: Firmware manifest
+  - id: M7.3.4
+    package: M7.3
+    name: Firmware manifest recorded per asset
+    type: DOC
+    owners:
+      - NET-R
+    predecessors:
+      - M7.3.3
+    duration:
+      min: 1
+      max: 1
+  - id: M7.4.1
+    package: M7.4
+    name: PXE / inventory sweep across fleet
+    type: DIG
+    owners:
+      - NET-R
+    predecessors:
+      - M7.2.2
+    duration:
+      min: 1
+      max: 1
+  - id: M7.4.2
+    package: M7.4
+    name: Reconcile serial ↔ MAC ↔ rack/slot ↔ as-built matrix
+    type: DIG
+    owners:
+      - NET-R
+    predecessors:
+      - M7.4.1
+      - M6.8.3
+      - M6.4.2
+    duration:
+      min: 2
+      max: 2
+    gate: true
+    criterion: Inventory reconciled, zero unmatched
+    evidence: Reconciliation report
+  - id: M7.4.3
+    package: M7.4
+    name: Exceptions investigated to zero unmatched assets
+    type: HYB
+    owners:
+      - NET-R
+      - OPS
+    predecessors:
+      - M7.4.2
+    duration:
+      min: 2
+      max: 2
+  - id: M7.5.1
+    package: M7.5
+    name: Subnet manager / control plane extended to compute leaf ports
+    type: DIG
+    owners:
+      - NET-R
+    predecessors:
+      - M7.3.3
+      - M5.6.4
+    duration:
+      min: 1
+      max: 1
+  - id: M7.5.2
+    package: M7.5
+    name: Full topology discovery
+    type: DIG
+    owners:
+      - NET-R
+    predecessors:
+      - M7.5.1
+    duration:
+      min: 1
+      max: 1
+  - id: M7.5.3
+    package: M7.5
+    name: Discovered topology diffed against intended design
+    type: DIG
+    owners:
+      - NET-R
+    predecessors:
+      - M7.5.2
+    duration:
+      min: 2
+      max: 2
+    gate: true
+    criterion: Discovered topology diffed against design
+    evidence: Topology diff
+  - id: M7.5.4
+    package: M7.5
+    name: Link error counters & optical power baselined fleet-wide
+    type: DIG
+    owners:
+      - NET-R
+    predecessors:
+      - M7.5.3
+    duration:
+      min: 1
+      max: 1
+  - id: M7.6.1
+    package: M7.6
+    name: NVLink domain enumeration — 72 GPUs present per rack
+    type: DIG
+    owners:
+      - NET-R
+    predecessors:
+      - M7.3.3
+    duration:
+      min: 1
+      max: 1
+  - id: M7.6.2
+    package: M7.6
+    name: Partition state & NVLink bandwidth spot-check
+    type: DIG
+    owners:
+      - NET-R
+    predecessors:
+      - M7.6.1
+    duration:
+      min: 2
+      max: 2
+  - id: M7.7.1
+    package: M7.7
+    name: Image build & pin — OS, driver, CUDA, NCCL, DOCA
+    type: DIG
+    owners:
+      - NET-R
+    predecessors:
+      - M7.3.4
+    duration:
+      min: 3
+      max: 3
+  - id: M7.7.2
+    package: M7.7
+    name: Bare-metal provisioning fleet-wide
+    type: DIG
+    owners:
+      - NET-R
+    predecessors:
+      - M7.7.1
+      - M7.5.3
+    duration:
+      min: 2
+      max: 2
+  - id: M7.7.3
+    package: M7.7
+    name: Post-image health sweep
+    type: DIG
+    owners:
+      - NET-R
+    predecessors:
+      - M7.7.2
+    duration:
+      min: 1
+      max: 1
+  - id: M7.8.1
+    package: M7.8
+    name: Storage mounts & throughput spot-check
+    type: DIG
+    owners:
+      - NET-R
+    predecessors:
+      - M7.7.3
+      - M5.2.2
+    duration:
+      min: 2
+      max: 2
+  - id: M7.8.2
+    package: M7.8
+    name: Scheduler integration — Slurm or Kubernetes
+    type: DIG
+    owners:
+      - NET-R
+    predecessors:
+      - M7.8.1
+    duration:
+      min: 2
+      max: 2
+  - id: M7.9.1
+    package: M7.9
+    name: Telemetry agents deployed; metrics flowing
+    type: DIG
+    owners:
+      - OPS
+    predecessors:
+      - M7.7.3
+    duration:
+      min: 2
+      max: 2
+  - id: M7.9.2
+    package: M7.9
+    name: Monitoring thresholds & alert routing live before M8
+    type: DIG
+    owners:
+      - OPS
+    predecessors:
+      - M7.9.1
+    duration:
+      min: 1
+      max: 1
+    gate: true
+    criterion: Monitoring live before validation begins
+    evidence: Alert routing test
+  - id: M8.1.1
+    package: M8.1
+    name: DCGM diagnostics — short level, full fleet
+    type: DIG
+    owners:
+      - NET-R
+    predecessors:
+      - M7.9.2
+    duration:
+      min: 1
+      max: 1
+  - id: M8.1.2
+    package: M8.1
+    name: DCGM diagnostics — extended level, full fleet
+    type: DIG
+    owners:
+      - NET-R
+    predecessors:
+      - M8.1.1
+    duration:
+      min: 3
+      max: 3
+  - id: M8.1.3
+    package: M8.1
+    name: HBM / ECC error sweep & threshold check
+    type: DIG
+    owners:
+      - NET-R
+    predecessors:
+      - M8.1.2
+    duration:
+      min: 1
+      max: 1
+  - id: M8.1.4
+    package: M8.1
+    name: Thermal soak at sustained node load
+    type: HYB
+    owners:
+      - NET-R
+      - MECH
+    predecessors:
+      - M8.1.3
+    duration:
+      min: 3
+      max: 3
+  - id: M8.1.5
+    package: M8.1
+    name: Power draw vs. envelope, per rack and per row
+    type: HYB
+    owners:
+      - NET-R
+      - ELEC
+    predecessors:
+      - M8.1.4
+    duration:
+      min: 1
+      max: 1
+  - id: M8.2.1
+    package: M8.2
+    name: Link error counter delta vs. M7.5.4 baseline
+    type: DIG
+    owners:
+      - NET-R
+    predecessors:
+      - M7.9.2
+    duration:
+      min: 1
+      max: 1
+  - id: M8.2.2
+    package: M8.2
+    name: Optical power sweep against thresholds; flag marginals
+    type: DIG
+    owners:
+      - NET-R
+    predecessors:
+      - M8.2.1
+    duration:
+      min: 1
+      max: 1
+  - id: M8.2.3
+    package: M8.2
+    name: Retransmit / symbol error analysis; flapping link identification
+    type: DIG
+    owners:
+      - NET-R
+    predecessors:
+      - M8.2.2
+    duration:
+      min: 1
+      max: 1
+  - id: M8.2.4
+    package: M8.2
+    name: Congestion & incast behavior test
+    type: DIG
+    owners:
+      - NET-R
+    predecessors:
+      - M8.2.3
+    duration:
+      min: 2
+      max: 2
+  - id: M8.3.1
+    package: M8.3
+    name: NCCL all_reduce — single rack
+    type: DIG
+    owners:
+      - NET-R
+    predecessors:
+      - M8.1.2
+      - M8.2.3
+    duration:
+      min: 1
+      max: 1
+  - id: M8.3.2
+    package: M8.3
+    name: NCCL all_reduce / all_gather — pod scale
+    type: DIG
+    owners:
+      - NET-R
+    predecessors:
+      - M8.3.1
+    duration:
+      min: 1
+      max: 1
+  - id: M8.3.3
+    package: M8.3
+    name: NCCL bus bandwidth — full hall, 4,608 GPUs
+    type: DIG
+    owners:
+      - NET-R
+    predecessors:
+      - M8.3.2
+    duration:
+      min: 2
+      max: 2
+    gate: true
+    criterion: Full-hall NCCL bandwidth + rail variance analysis
+    evidence: Benchmark results
+  - id: M8.3.4
+    package: M8.3
+    name: Bandwidth variance analysis by rail — rail misalignment detection
+    type: DIG
+    owners:
+      - NET-R
+    predecessors:
+      - M8.3.3
+    duration:
+      min: 1
+      max: 1
+    gate: true
+    criterion: Full-hall NCCL bandwidth + rail variance analysis
+    evidence: Benchmark results
+  - id: M8.4.1
+    package: M8.4
+    name: Sustained synthetic training run, full footprint
+    type: DIG
+    owners:
+      - NET-R
+    predecessors:
+      - M8.3.4
+    duration:
+      min: 5
+      max: 14
+  - id: M8.4.2
+    package: M8.4
+    name: Fault rate tracked against SLA threshold during soak
+    type: DIG
+    owners:
+      - NET-R
+    predecessors:
+      - M8.4.1
+  - id: M8.4.3
+    package: M8.4
+    name: Uptime measured across the soak window
+    type: DIG
+    owners:
+      - NET-R
+    predecessors:
+      - M8.4.2
+  - id: M8.5.1
+    package: M8.5
+    name: Fault triage & classification — node / link / switch / thermal / power
+    type: HYB
+    owners:
+      - OPS
+      - NET-R
+    predecessors:
+      - M8.1.2
+  - id: M8.5.2
+    package: M8.5
+    name: "Isolate: device vs. optic vs. cable vs. config"
+    type: HYB
+    owners:
+      - OPS
+      - NET-R
+    predecessors:
+      - M8.5.1
+  - id: M8.5.3
+    package: M8.5
+    name: Replace from onsite spares
+    type: PHY
+    owners:
+      - OPS
+    predecessors:
+      - M8.5.2
+  - id: M8.5.4
+    package: M8.5
+    name: ICT remediation of cabling faults (requires M1.5.3 retention)
+    type: PHY
+    owners:
+      - ICT
+    predecessors:
+      - M8.5.2
+  - id: M8.5.5
+    package: M8.5
+    name: Re-validate repaired units
+    type: DIG
+    owners:
+      - NET-R
+    predecessors:
+      - M8.5.3
+      - M8.5.4
+  - id: M8.5.6
+    package: M8.5
+    name: RMA raised, tracked to credit; spares replenished
+    type: DOC
+    owners:
+      - OPS
+    predecessors:
+      - M8.5.5
+  - id: M8.5.7
+    package: M8.5
+    name: Repeat-fault-by-rack analysis — systemic vs. one-off
+    type: DIG
+    owners:
+      - PM
+    predecessors:
+      - M8.5.6
+    duration:
+      min: 1
+      max: 1
+  - id: M8.6.1
+    package: M8.6
+    name: Compile evidence against each acceptance criterion
+    type: DOC
+    owners:
+      - PM
+    predecessors:
+      - M8.4.3
+    duration:
+      min: 2
+      max: 2
+  - id: M8.6.2
+    package: M8.6
+    name: Customer acceptance review
+    type: DOC
+    owners:
+      - CUST
+      - PM
+    predecessors:
+      - M8.6.1
+    duration:
+      min: 1
+      max: 1
+    gate: true
+    criterion: Acceptance measured against definition of done
+    evidence: Evidence pack + signature
+  - id: M8.6.3
+    package: M8.6
+    name: Exceptions & conditional acceptance items logged with owners
+    type: DOC
+    owners:
+      - PM
+    predecessors:
+      - M8.6.2
+    duration:
+      min: 1
+      max: 1
+  - id: M8.7.1
+    package: M8.7
+    name: As-built patching matrix finalized
+    type: DOC
+    owners:
+      - ICT
+    predecessors:
+      - M8.5.7
+    duration:
+      min: 1
+      max: 1
+  - id: M8.7.2
+    package: M8.7
+    name: Test result package — all tiers, all links, all nodes
+    type: DOC
+    owners:
+      - ICT
+      - NET-R
+    predecessors:
+      - M8.7.1
+    duration:
+      min: 2
+      max: 2
+  - id: M8.7.3
+    package: M8.7
+    name: Asset register & firmware manifest final
+    type: DOC
+    owners:
+      - OPS
+    predecessors:
+      - M8.7.2
+    duration:
+      min: 1
+      max: 1
+  - id: M8.8.1
+    package: M8.8
+    name: Runbooks & escalation model handed to ops
+    type: DOC
+    owners:
+      - PM
+    predecessors:
+      - M8.7.3
+    duration:
+      min: 2
+      max: 2
+  - id: M8.8.2
+    package: M8.8
+    name: Spares location, ownership, and replenishment trigger assigned
+    type: DOC
+    owners:
+      - OPS
+    predecessors:
+      - M8.8.1
+    duration:
+      min: 1
+      max: 1
+  - id: M8.8.3
+    package: M8.8
+    name: Monitoring thresholds transitioned to steady-state
+    type: DIG
+    owners:
+      - OPS
+    predecessors:
+      - M8.8.2
+    duration:
+      min: 1
+      max: 1
+  - id: M8.8.4
+    package: M8.8
+    name: Customer access enabled — clusters live
+    type: HYB
+    owners:
+      - NET-R
+      - CUST
+    predecessors:
+      - M8.6.2
+      - M8.8.3
+    duration:
+      min: 1
+      max: 1
+    gate: true
+    criterion: Customer access enabled — clusters live
+    evidence: Access confirmation

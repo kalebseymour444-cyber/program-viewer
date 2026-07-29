@@ -131,11 +131,10 @@ Keep this list accurate as phases land.
 | `npm run dev` | phase 5 | Vite dev server |
 | `npm run build` | phase 5 | Validate → generate → production build |
 
-`program.yaml` does not exist yet — it is produced in phase 2. Until then:
-
-```
-npm run validate -- schema/__fixtures__/valid-program.yaml
-```
+`scripts/import-markdown.ts` is a **one-time** migration helper that has already run. It is the only
+markdown parser this repository is allowed to contain, and it exists to end markdown-as-source, not to
+sustain it. Do not re-run it — that would overwrite hand-reviewed edits to `program.yaml` with a fresh
+draft of the legacy content.
 
 Acceptance target: a clean clone works with `npm install && npm run generate && npm run build`.
 
@@ -174,7 +173,7 @@ commit — versioned definitions and sign-off as code review, for free. Lean int
 ## Build order (SPEC §8) — current position
 
 - [x] 1. Schema + validation — `schema/`, 70 tests, `npm run validate`
-- [ ] 2. Import helper (throwaway)
+- [x] 2. Import helper (throwaway) — `program.yaml` drafted; **see `docs/import-review.md`**
 - [ ] 3. Graph computation — **unit-tested. Show the plan first.**
 - [ ] 4. Generator
 - [ ] 5. App shell + deploy to Pages

@@ -111,6 +111,12 @@ generated from the schema/roles registry, hand-written outside `content/`, or dr
 These are real defects in the legacy data that the rollup will expose. Each needs a human decision —
 add the missing edge, or accept that the authored L0 was wrong.
 
+> **Confirmed by the phase 2 import, 2026-07-28.** These were found by reading; the importer then
+> reproduced them mechanically by diffing the authored L0 "Depends on" column against the edges rolled
+> up from the task tables. Q10, Q11 and Q12 are exactly as described below — see the reconciliation
+> section of `docs/import-review.md`. **Still undecided.** The importer deliberately did not invent the
+> missing edges; `program.yaml` currently encodes what the task tables say, not what L0 claims.
+
 **Q10 — M4 has no dependency on M1.** The legacy L0 table and the M4 L1 file both state "Depends on:
 M1". No task in `M4-tasks.md` references any M1 task. Derived, M4 is a **root node**. Either an edge is
 missing (M4.1.x should depend on M1.1.x design freeze) or the authored claim was never true.
@@ -144,9 +150,11 @@ disagreements are how Q10–Q14 were found.
 
 ## Structural / operational
 
-**Q17 — `datahall-bringup/` is flat.** Every link inside it points into `L1-milestones/`, `L2-tasks/`,
-and `registers/` subdirectories that do not exist. The links are already broken. The importer cannot
-rely on directory structure to classify files — it must go by filename.
+**Q17 — `datahall-bringup/` is flat.** ~~Every link inside it points into `L1-milestones/`, `L2-tasks/`,
+and `registers/` subdirectories that do not exist.~~ **Resolved 2026-07-28** — the importer classifies
+by filename (`M{n}-tasks.md` vs `M{n}-*.md`) and never resolves an internal link. The broken links
+matter only for reading the legacy files in place, and those files stop being authoritative once
+`program.yaml` is reviewed.
 
 **Q18 — Roles referenced but not registered.** `conventions.md` registers 14 roles.
 `dependencies.md` references "Sourcing" as a party. Register it or drop it.
